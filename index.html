@@ -3,105 +3,147 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>צופף חדשות</title>
+    <title>צופף חדשות - ניהול מתקדם</title>
     <style>
-        /* הגדרות כלליות */
-        body { font-family: sans-serif; background: #f4f4f4; margin: 0; padding: 0; display: flex; flex-direction: column; min-height: 100vh; }
-        
-        /* כותרת עליונה */
-        header { background: #007bff; color: white; padding: 15px; position: relative; text-align: center; }
-        
-        /* כפתור הגדרות */
+        body { font-family: sans-serif; background: #f4f4f4; margin: 0; padding: 0; }
+        header { background: #007bff; color: white; padding: 15px; text-align: center; position: relative; }
         .settings-btn { position: absolute; top: 15px; left: 15px; font-size: 24px; cursor: pointer; background: none; border: none; color: white; }
-
-        /* פריסה ראשית */
-        .main-layout { display: flex; flex: 1; max-width: 1200px; margin: auto; width: 100%; gap: 15px; padding: 15px; box-sizing: border-box; }
         
-        /* עמודת תוכן מרכזית */
-        .content { flex: 3; background: white; border-radius: 8px; border: 1px solid #ddd; overflow: hidden; }
+        .main-layout { display: flex; max-width: 1200px; margin: auto; gap: 15px; padding: 15px; }
+        .content { flex: 3; background: white; border-radius: 8px; padding: 10px; border: 1px solid #ddd; }
+        .ads-sidebar { flex: 1; background: #fff; border: 1px solid #ddd; border-radius: 8px; padding: 15px; text-align: center; }
         
-        /* עמודת פרסומות צד */
-        .ads-sidebar { flex: 1; background: #fff; border: 1px solid #ddd; border-radius: 8px; padding: 15px; text-align: center; display: flex; flex-direction: column; gap: 10px; }
-        .ad-box { background: #eee; border: 1px dashed #bbb; padding: 20px; border-radius: 4px; color: #666; font-size: 0.9em; }
+        /* עיצוב המבזק */
+        .news-item { padding: 12px; border-bottom: 1px solid #eee; position: relative; }
+        .news-time { font-size: 0.7em; color: #888; margin-left: 8px; font-weight: normal; }
+        .spoiler { background: #333; color: #333; cursor: pointer; padding: 0 4px; border-radius: 3px; transition: 0.3s; }
+        .spoiler:active { color: white; background: #555; }
 
-        /* כותרות ועיצוב חדשות */
-        h1 { margin: 0; font-size: 1.5em; }
-        .news-item { padding: 12px; border-bottom: 1px solid #eee; }
-        .news-header { display: flex; justify-content: space-between; align-items: flex-start; }
-        a { text-decoration: none; color: #333; font-weight: bold; }
-        .source { color: #007bff; font-size: 0.75em; background: #e7f3ff; padding: 2px 6px; border-radius: 4px; }
-        .share-btn { margin-top: 8px; background: #25d366; color: white; border: none; padding: 5px 10px; border-radius: 4px; cursor: pointer; }
+        /* לוח ניהול */
+        #admin-panel { display: none; background: #fff; border: 2px solid #007bff; margin: 15px; padding: 20px; border-radius: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
+        .admin-input { width: 100%; margin-bottom: 12px; padding: 10px; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box; }
+        .tools { margin-bottom: 10px; display: flex; gap: 8px; flex-wrap: wrap; }
+        .tool-btn { padding: 6px 12px; cursor: pointer; background: #f8f9fa; border: 1px solid #ddd; border-radius: 4px; font-size: 14px; }
+        .tool-btn:hover { background: #e2e6ea; }
 
-        /* פוטר - פרסום */
         footer { background: #333; color: white; text-align: center; padding: 15px; margin-top: 20px; }
-        footer a { color: #ffca28; text-decoration: underline; }
-
-        /* התאמה לנייד */
-        @media (max-width: 768px) {
-            .main-layout { flex-direction: column; }
-            .ads-sidebar { order: 2; }
-        }
     </style>
 </head>
 <body>
 
-    <header>
-        <button class="settings-btn" onclick="openAdmin()">⚙️</button>
-        <h1>צופף חדשות</h1>
-    </header>
+<header>
+    <button class="settings-btn" onclick="checkCode()">⚙️</button>
+    <h1>צופף חדשות</h1>
+</header>
 
-    <div class="main-layout">
-        <div class="content">
-            <div id="news-list"></div>
-        </div>
-
-                     <div class="ad-box">כאן תהיה פרסומת 2</div            <div class="ad-box">מקום פנוי לפרסום</d
-        </aside>
+<div id="admin-panel">
+    <h3>יצירת מבזק אישי חדש</h3>
+    
+    <div class="tools">
+        <button class="tool-btn" onclick="addTag('b')"><b>B</b></button>
+        <button class="tool-btn" onclick="addTag('i')"><i>I</i></button>
+        <input type="color" id="textColor" title="צבע טקסט" onchange="addColor()">
+        <button class="tool-btn" onclick="addSpoiler()">ספוילר (מוסתר)</button>
+        <button class="tool-btn" onclick="addLink()">קישור עם כיתוב</button>
     </div>
 
-    <footer>
-        רוצים לפרסם? <a href="mailto:s75247002@gmail.com?subject=פרסום באתר חדשות">לחצו כאן</a>
-    </footer>
+    <textarea id="flashText" class="admin-input" rows="4" placeholder="תוכן המבזק האישי..."></textarea>
+    
+    <div style="display: flex; gap: 10px;">
+        <div style="flex: 1;">
+            <label>שעה להצגה:</label>
+            <input type="time" id="flashTime" class="admin-input">
+        </div>
+        <div style="flex: 1;">
+            <label>תאריך:</label>
+            <input type="date" id="flashDate" class="admin-input">
+        </div>
+    </div>
 
-    <script>
-        // פונקציית כניסה לניהול
-        function openAdmin() {
-            const code = prompt("נא להקיש קוד ניהול:");
-            if (code === "9188") {
-                alert("קוד תקין. מעביר אותך לניהול ב-GitHub...");
-                window.location.href = "https://github.com/NETANEL-RABI/my-news-aggregator";
-            } else {
-                alert("קוד שגוי!");
-            }
-        }
+    <button onclick="publishFlash()" style="background: #28a745; color: white; padding: 12px; border: none; width: 100%; cursor: pointer; font-weight: bold; border-radius: 4px;">פרסם מבזק</button>
+</div>
 
-        // שיתוף
-        function shareNews(title, url) {
-            if (navigator.share) {
-                navigator.share({ title: title, url: url });
-            } else {
-                window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(title + " " + url)}`);
-            }
-        }
+<div class="main-layout">
+    <div class="content">
+        <div id="news-list">טוען מבזקים...</div>
+    </div>
+    <aside class="ads-sidebar">
+        <div style="background:#f8f9fa; border:1px dashed #ccc; height:200px; line-height:200px; color:#999;">פרסומת כאן</div>
+    </aside>
+</div>
 
-        // טעינת חדשות
-        fetch('news.json')
-            .then(response => response.json())
-            .then(data => {
-                const list = document.getElementById('news-list');
-                data.forEach(item => {
-                    const div = document.createElement('div');
-                    div.className = 'news-item';
-                    div.innerHTML = `
-                        <div class="news-header">
-                            <a href="${item.link}" target="_blank">${item.title}</a>
-                            <span class="source">${item.source}</span>
-                        </div>
-                        <button class="share-btn" onclick="shareNews('${item.title.replace(/'/g, "\\'")}', '${item.link}')">שתף</button>
-                    `;
-                    list.appendChild(div);
-                });
+<footer>
+    רוצים לפרסם? <a href="mailto:s75247002@gmail.com" style="color:#ffc107; font-weight: bold;">לחצו כאן</a>
+</footer>
+
+<script>
+    // הגדרת זמן נוכחי בברירת מחדל בלוח הניהול
+    const now = new Date();
+    document.getElementById('flashTime').value = now.getHours().toString().padStart(2, '0') + ":" + now.getMinutes().toString().padStart(2, '0');
+    document.getElementById('flashDate').valueAsDate = now;
+
+    function checkCode() {
+        const code = prompt("נא להקיש קוד ניהול:");
+        if (code === "9188") {
+            document.getElementById('admin-panel').style.display = 'block';
+            window.scrollTo({top: 0, behavior: 'smooth'});
+        } else { alert("קוד שגוי!"); }
+    }
+
+    function addTag(tag) {
+        const txt = document.getElementById('flashText');
+        txt.value += `<${tag}>טקסט</${tag}>`;
+    }
+
+    function addSpoiler() {
+        document.getElementById('flashText').value += `<span class="spoiler" onclick="this.style.color='white';this.style.background='none'">טקסט מוסתר</span>`;
+    }
+
+    function addLink() {
+        const url = prompt("כתובת האתר (URL):", "https://");
+        const label = prompt("מה יהיה כתוב על הקישור?");
+        if(url && label) document.getElementById('flashText').value += `<a href="${url}" target="_blank" style="color:#007bff; text-decoration:underline;">${label}</a>`;
+    }
+
+    function addColor() {
+        const col = document.getElementById('textColor').value;
+        document.getElementById('flashText').value += `<span style="color:${col}">טקסט צבעוני</span>`;
+    }
+
+    function publishFlash() {
+        const time = document.getElementById('flashTime').value;
+        const text = document.getElementById('flashText').value;
+        alert(`המבזק מוכן לשעה ${time}!\n\nהעתק את הטקסט ועבור לעדכן את news.json ב-GitHub.`);
+        window.location.href = "https://github.com/NETANEL-RABI/my-news-aggregator/edit/main/news.json";
+    }
+
+    // פונקציה להצגת זמן בפורמט יפה
+    function formatTime(dateStr) {
+        if(!dateStr) return "";
+        const d = new Date(dateStr);
+        return d.getHours().toString().padStart(2, '0') + ":" + d.getMinutes().toString().padStart(2, '0');
+    }
+
+    fetch('news.json')
+        .then(res => res.json())
+        .then(data => {
+            const list = document.getElementById('news-list');
+            list.innerHTML = '';
+            data.forEach(item => {
+                const div = document.createElement('div');
+                div.className = 'news-item';
+                
+                // הוספת שעה ליד המבזק (אם יש זמן בנתונים, אם לא - נשתמש בזמן הנוכחי כברירת מחדל)
+                const displayTime = item.time || "עכשיו"; 
+
+                div.innerHTML = `
+                    <span class="news-time">${displayTime}</span>
+                    <a href="${item.link}" target="_blank">${item.title}</a>
+                    <span style="font-size:0.7em; background:#e7f3ff; color:#007bff; padding:2px 5px; border-radius:3px; margin-right:5px;">${item.source}</span>
+                `;
+                list.appendChild(div);
             });
-    </script>
+        });
+</script>
 </body>
 </html>
