@@ -5,6 +5,8 @@ import json
 rss_feeds = [
     "https://rss.walla.co.il/feed/1", # מבזקי וואלה
     "https://www.ynet.co.il/Integration/StoryRss2.xml" # מבזקי Ynet
+    https://www.emess.co.il/
+    
 ]
 
 all_news = []
