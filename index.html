@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>צופף חדשות - ניהול ותגובות</title>
+    <title>צופף חדשות - ניהול תוכן</title>
     <style>
         body { font-family: sans-serif; background: #f4f4f4; margin: 0; padding: 0; }
         header { background: #007bff; color: white; padding: 15px; text-align: center; position: relative; }
@@ -11,28 +11,28 @@
         
         .main-layout { display: flex; max-width: 1200px; margin: auto; gap: 15px; padding: 15px; }
         .content { flex: 3; background: white; border-radius: 8px; padding: 10px; border: 1px solid #ddd; }
-        .ads-sidebar { flex: 1; background: #fff; border: 1px solid #ddd; border-radius: 8px; padding: 15px; text-align: center; }
         
-        .news-item { padding: 15px; border-bottom: 1px solid #eee; display: flex; flex-direction: column; gap: 8px; }
-        .news-main { display: flex; align-items: flex-start; gap: 10px; }
-        .news-time { font-size: 0.8em; color: #888; white-space: nowrap; }
-        .news-title { flex-grow: 1; font-size: 1.05em; line-height: 1.4; }
-        .news-title a { color: #333; text-decoration: none; font-weight: bold; }
-        
-        /* שורת תגובות */
-        .reactions { display: flex; gap: 10px; margin-right: 45px; }
-        .reaction-btn { background: #f8f9fa; border: 1px solid #eee; border-radius: 20px; padding: 2px 8px; cursor: pointer; font-size: 0.9em; transition: 0.2s; }
-        .reaction-btn:hover { background: #e9ecef; }
-        .reaction-btn.active { background: #d1e7dd; border-color: #a3cfbb; }
+        /* פרסומת אחת בצד */
+        .ads-sidebar { flex: 1; }
+        #main-ad { background: #fff; border: 2px solid #ffca28; border-radius: 8px; padding: 15px; text-align: center; min-height: 200px; }
 
-        .spoiler { background: #333; color: #333; cursor: pointer; padding: 0 4px; border-radius: 3px; }
-        .spoiler.revealed { background: #eee; color: #333; }
+        .news-item { padding: 15px; border-bottom: 1px solid #eee; }
+        .news-header { display: flex; align-items: flex-start; gap: 10px; margin-bottom: 5px; }
+        .news-time { font-size: 0.85em; color: #666; font-weight: bold; }
+        .news-title { font-size: 1.1em; font-weight: bold; color: #333; }
+        .news-body { font-size: 0.95em; color: #444; margin-top: 5px; line-height: 1.5; white-space: pre-wrap; }
+
+        .reactions { display: flex; gap: 8px; margin-top: 10px; border-top: 1px solid #fafafa; pt: 5px; }
+        .reaction-btn { background: #f1f3f5; border: none; border-radius: 12px; padding: 4px 10px; cursor: pointer; }
 
         /* לוח ניהול */
         #admin-panel { display: none; background: #fff; border: 2px solid #007bff; margin: 15px; padding: 20px; border-radius: 8px; }
+        .admin-section { border-bottom: 1px solid #eee; padding-bottom: 15px; margin-bottom: 15px; }
         .admin-input { width: 100%; margin-bottom: 10px; padding: 10px; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box; }
+        .tools { margin-bottom: 10px; display: flex; gap: 5px; flex-wrap: wrap; }
         
-        footer { background: #333; color: white; text-align: center; padding: 15px; margin-top: 20px; }
+        footer { background: #333; color: white; text-align: center; padding: 20px; }
+        @media (max-width: 768px) { .main-layout { flex-direction: column; } }
     </style>
 </head>
 <body>
@@ -43,15 +43,34 @@
 </header>
 
 <div id="admin-panel">
-    <h3>ניהול מבזק</h3>
-    <textarea id="flashText" class="admin-input" rows="3" placeholder="תוכן המבזק..."></textarea>
-    <button onclick="publishFlash()" style="background: #28a745; color: white; padding: 10px; border: none; width: 100%; cursor: pointer; border-radius: 4px;">פרסם עדכון</button>
+    <div class="admin-section">
+        <h3>1. עדכון פרסומת</h3>
+        <textarea id="adContent" class="admin-input" placeholder="הכנס קוד HTML או טקסט לפרסומת..."></textarea>
+        <button onclick="saveAd()" style="background:#ffca28; border:none; padding:10px; cursor:pointer; width:100%;">עדכן פרסומת (מקומי)</button>
+    </div>
+
+    <div class="admin-section">
+        <h3>2. יצירת מבזק מפורט</h3>
+        <div class="tools">
+            <button onclick="addTag('b')"><b>B</b></button>
+            <button onclick="addTag('i')"><i>I</i></button>
+            <button onclick="addSpoiler()">ספוילר</button>
+        </div>
+        <input type="text" id="mabzakTitle" class="admin-input" placeholder="כותרת המבזק">
+        <textarea id="mabzakBody" class="admin-input" rows="4" placeholder="תוכן המבזק המפורט..."></textarea>
+        <input type="time" id="mabzakTime" class="admin-input">
+        <button onclick="publishMabzak()" style="background:#28a745; color:white; border:none; padding:10px; cursor:pointer; width:100%;">פרסם מבזק</button>
+    </div>
 </div>
 
 <div class="main-layout">
-    <div class="content" id="news-list">טוען...</div>
+    <div class="content" id="news-list">טוען מבזקים...</div>
+    
     <aside class="ads-sidebar">
-        <div style="color:#aaa; padding:50px 0;">פרסומת</div>
+        <div id="main-ad">
+            <p>מקום לפרסומת שלך</p>
+            <small>ניתן לעדכן דרך ההגדרות</small>
+        </div>
     </aside>
 </div>
 
@@ -64,13 +83,26 @@
         if (prompt("קוד ניהול:") === "9188") document.getElementById('admin-panel').style.display = 'block';
     }
 
-    function publishFlash() {
+    // ניהול פרסומת
+    function saveAd() {
+        const content = document.getElementById('adContent').value;
+        localStorage.setItem('siteAd', content);
+        document.getElementById('main-ad').innerHTML = content;
+        alert("הפרסומת עודכנה בדפדפן שלך! כדי שכולם יראו, יש להדביק את התוכן בקוד.");
+    }
+
+    // ניהול מבזק
+    function addTag(t) { document.getElementById('mabzakBody').value += `<${t}>טקסט</${t}>`; }
+    function addSpoiler() { document.getElementById('mabzakBody').value += `<span style="background:#333;color:#333" onclick="this.style.color='inherit';this.style.background='none'">ספוילר</span>`; }
+
+    function publishMabzak() {
+        alert("המבזק המפורט מוכן. העבר לעריכת news.json ב-GitHub.");
         window.location.href = "https://github.com/NETANEL-RABI/my-news-aggregator/edit/main/news.json";
     }
 
-    // פונקציה לטיפול בלחיצה על תגובה
-    function react(btn) {
-        btn.classList.toggle('active');
+    // טעינת פרסומת שמורה
+    if(localStorage.getItem('siteAd')) {
+        document.getElementById('main-ad').innerHTML = localStorage.getItem('siteAd');
     }
 
     fetch('news.json')
@@ -78,28 +110,19 @@
         .then(data => {
             const list = document.getElementById('news-list');
             list.innerHTML = '';
-            data.forEach((item, index) => {
+            data.forEach(item => {
                 const div = document.createElement('div');
                 div.className = 'news-item';
-                
-                const titleHtml = item.link && item.link !== "#" 
-                    ? `<a href="${item.link}" target="_blank">${item.title}</a>` 
-                    : `<span>${item.title}</span>`;
-
                 div.innerHTML = `
-                    <div class="news-main">
+                    <div class="news-header">
                         <div class="news-time">${item.time || 'עכשיו'}</div>
-                        <div class="news-title">
-                            ${titleHtml}
-                            <small style="color:#007bff; margin-right:5px;">[${item.source}]</small>
-                        </div>
+                        <div class="news-title">${item.title}</div>
                     </div>
+                    ${item.body ? `<div class="news-body">${item.body}</div>` : ''}
                     <div class="reactions">
-                        <button class="reaction-btn" onclick="react(this)">🙏</button>
-                        <button class="reaction-btn" onclick="react(this)">👍</button>
-                        <button class="reaction-btn" onclick="react(this)">👎</button>
-                        <button class="reaction-btn" onclick="react(this)">😥</button>
-                        <button class="reaction-btn" onclick="react(this)">😀</button>
+                        <button class="reaction-btn" onclick="this.style.background='#d1e7dd'">🙏</button>
+                        <button class="reaction-btn" onclick="this.style.background='#d1e7dd'">👍</button>
+                        <button class="reaction-btn" onclick="this.style.background='#d1e7dd'">😥</button>
                     </div>
                 `;
                 list.appendChild(div);
