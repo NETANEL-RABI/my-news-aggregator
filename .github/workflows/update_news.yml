@@ -2,7 +2,7 @@ name: Update News
 
 on:
   schedule:
-    - cron: '0 * * * *' # רץ כל שעה עגולה
+    - cron: '5 * * * *' # רץ כל שעה עגולה
   workflow_dispatch: # מאפשר להריץ ידנית לבדיקה
 
 jobs:
