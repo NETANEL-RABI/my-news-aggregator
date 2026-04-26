@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>צופף חדשות - ניהול מתקדם</title>
+    <title>צופף חדשות - ניהול ותגובות</title>
     <style>
         body { font-family: sans-serif; background: #f4f4f4; margin: 0; padding: 0; }
         header { background: #007bff; color: white; padding: 15px; text-align: center; position: relative; }
@@ -13,19 +13,25 @@
         .content { flex: 3; background: white; border-radius: 8px; padding: 10px; border: 1px solid #ddd; }
         .ads-sidebar { flex: 1; background: #fff; border: 1px solid #ddd; border-radius: 8px; padding: 15px; text-align: center; }
         
-        /* עיצוב המבזק */
-        .news-item { padding: 12px; border-bottom: 1px solid #eee; position: relative; }
-        .news-time { font-size: 0.7em; color: #888; margin-left: 8px; font-weight: normal; }
-        .spoiler { background: #333; color: #333; cursor: pointer; padding: 0 4px; border-radius: 3px; transition: 0.3s; }
-        .spoiler:active { color: white; background: #555; }
+        .news-item { padding: 15px; border-bottom: 1px solid #eee; display: flex; flex-direction: column; gap: 8px; }
+        .news-main { display: flex; align-items: flex-start; gap: 10px; }
+        .news-time { font-size: 0.8em; color: #888; white-space: nowrap; }
+        .news-title { flex-grow: 1; font-size: 1.05em; line-height: 1.4; }
+        .news-title a { color: #333; text-decoration: none; font-weight: bold; }
+        
+        /* שורת תגובות */
+        .reactions { display: flex; gap: 10px; margin-right: 45px; }
+        .reaction-btn { background: #f8f9fa; border: 1px solid #eee; border-radius: 20px; padding: 2px 8px; cursor: pointer; font-size: 0.9em; transition: 0.2s; }
+        .reaction-btn:hover { background: #e9ecef; }
+        .reaction-btn.active { background: #d1e7dd; border-color: #a3cfbb; }
+
+        .spoiler { background: #333; color: #333; cursor: pointer; padding: 0 4px; border-radius: 3px; }
+        .spoiler.revealed { background: #eee; color: #333; }
 
         /* לוח ניהול */
-        #admin-panel { display: none; background: #fff; border: 2px solid #007bff; margin: 15px; padding: 20px; border-radius: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
-        .admin-input { width: 100%; margin-bottom: 12px; padding: 10px; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box; }
-        .tools { margin-bottom: 10px; display: flex; gap: 8px; flex-wrap: wrap; }
-        .tool-btn { padding: 6px 12px; cursor: pointer; background: #f8f9fa; border: 1px solid #ddd; border-radius: 4px; font-size: 14px; }
-        .tool-btn:hover { background: #e2e6ea; }
-
+        #admin-panel { display: none; background: #fff; border: 2px solid #007bff; margin: 15px; padding: 20px; border-radius: 8px; }
+        .admin-input { width: 100%; margin-bottom: 10px; padding: 10px; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box; }
+        
         footer { background: #333; color: white; text-align: center; padding: 15px; margin-top: 20px; }
     </style>
 </head>
@@ -37,91 +43,34 @@
 </header>
 
 <div id="admin-panel">
-    <h3>יצירת מבזק אישי חדש</h3>
-    
-    <div class="tools">
-        <button class="tool-btn" onclick="addTag('b')"><b>B</b></button>
-        <button class="tool-btn" onclick="addTag('i')"><i>I</i></button>
-        <input type="color" id="textColor" title="צבע טקסט" onchange="addColor()">
-        <button class="tool-btn" onclick="addSpoiler()">ספוילר (מוסתר)</button>
-        <button class="tool-btn" onclick="addLink()">קישור עם כיתוב</button>
-    </div>
-
-    <textarea id="flashText" class="admin-input" rows="4" placeholder="תוכן המבזק האישי..."></textarea>
-    
-    <div style="display: flex; gap: 10px;">
-        <div style="flex: 1;">
-            <label>שעה להצגה:</label>
-            <input type="time" id="flashTime" class="admin-input">
-        </div>
-        <div style="flex: 1;">
-            <label>תאריך:</label>
-            <input type="date" id="flashDate" class="admin-input">
-        </div>
-    </div>
-
-    <button onclick="publishFlash()" style="background: #28a745; color: white; padding: 12px; border: none; width: 100%; cursor: pointer; font-weight: bold; border-radius: 4px;">פרסם מבזק</button>
+    <h3>ניהול מבזק</h3>
+    <textarea id="flashText" class="admin-input" rows="3" placeholder="תוכן המבזק..."></textarea>
+    <button onclick="publishFlash()" style="background: #28a745; color: white; padding: 10px; border: none; width: 100%; cursor: pointer; border-radius: 4px;">פרסם עדכון</button>
 </div>
 
 <div class="main-layout">
-    <div class="content">
-        <div id="news-list">טוען מבזקים...</div>
-    </div>
+    <div class="content" id="news-list">טוען...</div>
     <aside class="ads-sidebar">
-        <div style="background:#f8f9fa; border:1px dashed #ccc; height:200px; line-height:200px; color:#999;">פרסומת כאן</div>
+        <div style="color:#aaa; padding:50px 0;">פרסומת</div>
     </aside>
 </div>
 
 <footer>
-    רוצים לפרסם? <a href="mailto:s75247002@gmail.com" style="color:#ffc107; font-weight: bold;">לחצו כאן</a>
+    רוצים לפרסם? <a href="mailto:s75247002@gmail.com" style="color:#ffc107;">לחצו כאן</a>
 </footer>
 
 <script>
-    // הגדרת זמן נוכחי בברירת מחדל בלוח הניהול
-    const now = new Date();
-    document.getElementById('flashTime').value = now.getHours().toString().padStart(2, '0') + ":" + now.getMinutes().toString().padStart(2, '0');
-    document.getElementById('flashDate').valueAsDate = now;
-
     function checkCode() {
-        const code = prompt("נא להקיש קוד ניהול:");
-        if (code === "9188") {
-            document.getElementById('admin-panel').style.display = 'block';
-            window.scrollTo({top: 0, behavior: 'smooth'});
-        } else { alert("קוד שגוי!"); }
-    }
-
-    function addTag(tag) {
-        const txt = document.getElementById('flashText');
-        txt.value += `<${tag}>טקסט</${tag}>`;
-    }
-
-    function addSpoiler() {
-        document.getElementById('flashText').value += `<span class="spoiler" onclick="this.style.color='white';this.style.background='none'">טקסט מוסתר</span>`;
-    }
-
-    function addLink() {
-        const url = prompt("כתובת האתר (URL):", "https://");
-        const label = prompt("מה יהיה כתוב על הקישור?");
-        if(url && label) document.getElementById('flashText').value += `<a href="${url}" target="_blank" style="color:#007bff; text-decoration:underline;">${label}</a>`;
-    }
-
-    function addColor() {
-        const col = document.getElementById('textColor').value;
-        document.getElementById('flashText').value += `<span style="color:${col}">טקסט צבעוני</span>`;
+        if (prompt("קוד ניהול:") === "9188") document.getElementById('admin-panel').style.display = 'block';
     }
 
     function publishFlash() {
-        const time = document.getElementById('flashTime').value;
-        const text = document.getElementById('flashText').value;
-        alert(`המבזק מוכן לשעה ${time}!\n\nהעתק את הטקסט ועבור לעדכן את news.json ב-GitHub.`);
         window.location.href = "https://github.com/NETANEL-RABI/my-news-aggregator/edit/main/news.json";
     }
 
-    // פונקציה להצגת זמן בפורמט יפה
-    function formatTime(dateStr) {
-        if(!dateStr) return "";
-        const d = new Date(dateStr);
-        return d.getHours().toString().padStart(2, '0') + ":" + d.getMinutes().toString().padStart(2, '0');
+    // פונקציה לטיפול בלחיצה על תגובה
+    function react(btn) {
+        btn.classList.toggle('active');
     }
 
     fetch('news.json')
@@ -129,17 +78,29 @@
         .then(data => {
             const list = document.getElementById('news-list');
             list.innerHTML = '';
-            data.forEach(item => {
+            data.forEach((item, index) => {
                 const div = document.createElement('div');
                 div.className = 'news-item';
                 
-                // הוספת שעה ליד המבזק (אם יש זמן בנתונים, אם לא - נשתמש בזמן הנוכחי כברירת מחדל)
-                const displayTime = item.time || "עכשיו"; 
+                const titleHtml = item.link && item.link !== "#" 
+                    ? `<a href="${item.link}" target="_blank">${item.title}</a>` 
+                    : `<span>${item.title}</span>`;
 
                 div.innerHTML = `
-                    <span class="news-time">${displayTime}</span>
-                    <a href="${item.link}" target="_blank">${item.title}</a>
-                    <span style="font-size:0.7em; background:#e7f3ff; color:#007bff; padding:2px 5px; border-radius:3px; margin-right:5px;">${item.source}</span>
+                    <div class="news-main">
+                        <div class="news-time">${item.time || 'עכשיו'}</div>
+                        <div class="news-title">
+                            ${titleHtml}
+                            <small style="color:#007bff; margin-right:5px;">[${item.source}]</small>
+                        </div>
+                    </div>
+                    <div class="reactions">
+                        <button class="reaction-btn" onclick="react(this)">🙏</button>
+                        <button class="reaction-btn" onclick="react(this)">👍</button>
+                        <button class="reaction-btn" onclick="react(this)">👎</button>
+                        <button class="reaction-btn" onclick="react(this)">😥</button>
+                        <button class="reaction-btn" onclick="react(this)">😀</button>
+                    </div>
                 `;
                 list.appendChild(div);
             });
