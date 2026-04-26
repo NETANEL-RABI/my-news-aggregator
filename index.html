@@ -3,40 +3,50 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>צופף חדשות</title>
+    <title>צופף חדשות - המערכת המלאה</title>
     <style>
-        body { font-family: sans-serif; background: #f4f4f4; margin: 0; padding: 0; }
-        header { background: #007bff; color: white; padding: 15px; text-align: center; position: relative; }
+        :root { --primary: #007bff; --bg: #f4f4f4; }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: var(--bg); margin: 0; padding: 0; }
+        header { background: var(--primary); color: white; padding: 15px; text-align: center; position: relative; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+        
         .settings-btn { position: absolute; top: 15px; left: 15px; font-size: 24px; cursor: pointer; background: none; border: none; color: white; }
+
+        .main-layout { display: flex; max-width: 1200px; margin: auto; gap: 20px; padding: 20px; }
+        .content { flex: 3; background: white; border-radius: 12px; padding: 15px; box-shadow: 0 2px 10px rgba(0,0,0,0.05); }
         
-        .main-layout { display: flex; max-width: 1200px; margin: auto; gap: 15px; padding: 15px; }
-        .content { flex: 3; background: white; border-radius: 8px; padding: 10px; border: 1px solid #ddd; }
-        
-        /* פרסומת אחת בצד */
+        /* פרסומת */
         .ads-sidebar { flex: 1; }
-        #main-ad { background: #fff; border: 2px solid #ffca28; border-radius: 8px; padding: 15px; text-align: center; min-height: 200px; display: flex; align-items: center; justify-content: center; font-weight: bold; }
+        .main-ad-box { background: white; border: 2px solid #ffca28; border-radius: 12px; padding: 20px; text-align: center; position: sticky; top: 20px; }
 
-        .news-item { padding: 15px; border-bottom: 1px solid #eee; }
-        .news-header { display: flex; align-items: center; gap: 10px; }
-        .news-time { font-size: 0.85em; color: #666; font-weight: bold; }
-        .news-title { font-size: 1.1em; font-weight: bold; }
-        .news-body { font-size: 1em; color: #444; margin: 8px 0; line-height: 1.5; white-space: pre-wrap; }
+        /* מבזק */
+        .news-item { padding: 20px; border-bottom: 1px solid #eee; transition: 0.2s; }
+        .news-header { display: flex; align-items: center; gap: 12px; margin-bottom: 8px; }
+        .news-time { background: #eee; padding: 2px 8px; border-radius: 4px; font-size: 0.85em; font-weight: bold; color: #555; }
+        .news-title { font-size: 1.2em; font-weight: bold; color: #222; margin: 0; }
+        .news-body { font-size: 1.05em; color: #444; line-height: 1.6; margin-top: 10px; white-space: pre-wrap; }
 
-        /* שורת אימוג'ים למשתמשים */
-        .user-reactions { display: flex; gap: 8px; margin-top: 10px; }
-        .react-btn { background: #f8f9fa; border: 1px solid #eee; border-radius: 20px; padding: 4px 12px; cursor: pointer; font-size: 1.1em; transition: 0.2s; }
-        .react-btn:hover { background: #e9ecef; }
-        .react-btn.active { background: #d1e7dd; border-color: #a3cfbb; }
+        /* כלי עיצוב בתוך המבזק */
+        .spoiler { background: #333; color: #333; cursor: pointer; padding: 0 5px; border-radius: 4px; transition: 0.3s; }
+        .spoiler.revealed { background: #f0f0f0; color: inherit; }
+        .poll-container { background: #f9f9f9; border: 1px solid #ddd; padding: 15px; border-radius: 8px; margin-top: 15px; }
+        .poll-option { display: block; background: white; border: 1px solid #ccc; padding: 8px; margin: 8px 0; border-radius: 6px; cursor: pointer; text-align: center; font-weight: 500; }
+        .poll-option:hover { background: #eef6ff; border-color: var(--primary); }
 
-        .spoiler { background: #333; color: #333; cursor: pointer; padding: 0 4px; border-radius: 3px; }
-        .spoiler.revealed { background: #eee; color: inherit; }
+        /* תגובות משתמשים */
+        .user-reactions { display: flex; gap: 10px; margin-top: 15px; padding-top: 10px; border-top: 1px dashed #eee; }
+        .react-btn { background: #f8f9fa; border: 1px solid #eee; border-radius: 20px; padding: 5px 12px; cursor: pointer; font-size: 1.1em; }
+        .react-btn:active { transform: scale(0.9); background: #e2e6ea; }
 
         /* לוח ניהול */
-        #admin-panel { display: none; background: #fff; border: 2px solid #007bff; margin: 15px; padding: 20px; border-radius: 8px; }
-        .admin-input { width: 100%; margin-bottom: 10px; padding: 10px; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box; }
-        
-        footer { background: #333; color: white; text-align: center; padding: 20px; }
-        @media (max-width: 768px) { .main-layout { flex-direction: column; } }
+        #admin-panel { display: none; background: white; border: 2px solid var(--primary); margin: 20px; padding: 25px; border-radius: 12px; }
+        .admin-input { width: 100%; margin-bottom: 15px; padding: 12px; border: 1px solid #ccc; border-radius: 6px; font-size: 1em; box-sizing: border-box; }
+        .toolbar { display: flex; gap: 8px; margin-bottom: 10px; flex-wrap: wrap; }
+        .tool-btn { padding: 8px 12px; background: #f0f0f0; border: 1px solid #ddd; border-radius: 6px; cursor: pointer; }
+
+        footer { background: #333; color: white; text-align: center; padding: 30px; margin-top: 40px; }
+        footer a { color: #ffca28; font-weight: bold; text-decoration: none; font-size: 1.1em; }
+
+        @media (max-width: 768px) { .main-layout { flex-direction: column; } .ads-sidebar { order: -1; } }
     </style>
 </head>
 <body>
@@ -47,68 +57,106 @@
 </header>
 
 <div id="admin-panel">
-    <h3>יצירת מבזק מפורט (9188)</h3>
-    <p>השתמש בתגיות לעיצוב: <b>[B]הדגשה[/B]</b>, <span style="color:red">[COLOR=red]אדום[/COLOR]</span>, [SPOILER]ספוילר[/SPOILER]</p>
-    <input type="text" id="mTitle" class="admin-input" placeholder="כותרת המבזק">
-    <textarea id="mBody" class="admin-input" rows="4" placeholder="תוכן המבזק (כולל אימוג'ים שאתה מוסיף מהמקלדת שלך 😀)..."></textarea>
+    <h3>ניהול מבזק מפורט (9188)</h3>
+    <div class="toolbar">
+        <button class="tool-btn" onclick="wrap('b')"><b>B</b></button>
+        <button class="tool-btn" onclick="wrap('i')"><i>I</i></button>
+        <button class="tool-btn" onclick="addSpoiler()">ספוילר</button>
+        <button class="tool-btn" onclick="addLink()">קישור</button>
+        <button class="tool-btn" onclick="addPoll()">סקר</button>
+        <input type="color" id="colorPicker" onchange="addColor()" style="height:35px; border:none; cursor:pointer;">
+    </div>
+    <input type="text" id="inputTitle" class="admin-input" placeholder="כותרת המבזק...">
+    <textarea id="inputBody" class="admin-input" rows="6" placeholder="תוכן המבזק... (אפשר להוסיף אימוג'ים 😀)"></textarea>
     
-    <hr>
-    <input type="text" id="adUpdate" class="admin-input" placeholder="טקסט לפרסומת הצדדית">
-    
-    <button onclick="publish()" style="background:#28a745; color:white; border:none; padding:12px; width:100%; cursor:pointer; font-weight:bold; border-radius:4px;">עבור לעדכון ב-GitHub</button>
+    <button onclick="publish()" style="background:#28a745; color:white; border:none; padding:15px; width:100%; border-radius:8px; font-size:1.1em; cursor:pointer; font-weight:bold;">הפק ופרסם ב-GitHub</button>
 </div>
 
 <div class="main-layout">
-    <div class="content" id="news-list">טוען...</div>
+    <div class="content" id="news-container">טוען מבזקים...</div>
+    
     <aside class="ads-sidebar">
-        <div id="main-ad">כאן תופיע הפרסומת שלך</div>
+        <div class="main-ad-box" id="ad-container">
+            <div>
+                <h4 style="margin:0 0 10px 0; color:#ffca28;">פרסומת</h4>
+                <p>כאן המקום לפרסם את העסק שלך!</p>
+                <a href="mailto:s75247002@gmail.com" style="color:blue; font-size:0.9em;">לפרטים לחצו כאן</a>
+            </div>
+        </div>
     </aside>
 </div>
 
 <footer>
-    רוצים לפרסם? <a href="mailto:s75247002@gmail.com" style="color:#ffc107;">לחצו כאן</a>
+    מעוניינים בפרסום? <a href="mailto:s75247002@gmail.com">צרו קשר במייל s75247002@gmail.com</a>
 </footer>
 
 <script>
     function checkCode() {
-        if (prompt("קוד ניהול:") === "9188") document.getElementById('admin-panel').style.display = 'block';
+        if (prompt("קוד ניהול:") === "9188") {
+            document.getElementById('admin-panel').style.display = 'block';
+            window.scrollTo({top: 0, behavior: 'smooth'});
+        }
+    }
+
+    // פונקציות עריכה
+    const bodyArea = document.getElementById('inputBody');
+    function wrap(tag) { bodyArea.value += `<${tag}>טקסט</${tag}>`; }
+    function addColor() { bodyArea.value += `<span style="color:${document.getElementById('colorPicker').value}">טקסט בצבע</span>`; }
+    function addSpoiler() { bodyArea.value += `<span class="spoiler" onclick="this.classList.add('revealed')">טקסט מוסתר</span>`; }
+    function addLink() {
+        const url = prompt("כתובת הקישור:");
+        const label = prompt("כיתוב הקישור:");
+        if(url && label) bodyArea.value += `<a href="${url}" target="_blank" style="color:#007bff; text-decoration:underline;">${label}</a>`;
+    }
+    function addPoll() {
+        const q = prompt("שאלה לסקר:");
+        if(q) bodyArea.value += `\n[POLL] ${q} | אפשרות א | אפשרות ב`;
     }
 
     function publish() {
-        alert("העתק את הנתונים וערוך את הקבצים ב-GitHub.");
+        alert("המבזק מוכן! העתק אותו ועבור לעדכן את news.json.");
         window.location.href = "https://github.com/NETANEL-RABI/my-news-aggregator/edit/main/news.json";
     }
 
-    // פונקציית תגובה למשתמש
-    function handleReact(btn) {
-        btn.classList.toggle('active');
-        const count = btn.innerText.split(' ')[1] || 0;
-        // בגלל שאין שרת, זה רק ויזואלי למשתמש כרגע
+    // עיבוד סקרים בתוכן
+    function processContent(text) {
+        if (!text) return "";
+        if (text.includes("[POLL]")) {
+            const parts = text.split("|");
+            const question = parts[0].replace("[POLL]", "").trim();
+            let html = `<div class="poll-container"><strong>סקר: ${question}</strong>`;
+            for(let i=1; i<parts.length; i++) {
+                html += `<div class="poll-option" onclick="alert('תודה שהצבעת!')">${parts[i].trim()}</div>`;
+            }
+            return html + `</div>`;
+        }
+        return text;
     }
 
+    // טעינת חדשות
     fetch('news.json')
         .then(res => res.json())
         .then(data => {
-            const list = document.getElementById('news-list');
-            list.innerHTML = '';
+            const container = document.getElementById('news-container');
+            container.innerHTML = '';
             data.forEach(item => {
                 const div = document.createElement('div');
                 div.className = 'news-item';
                 div.innerHTML = `
                     <div class="news-header">
-                        <div class="news-time">${item.time || 'עכשיו'}</div>
-                        <div class="news-title">${item.title}</div>
+                        <span class="news-time">${item.time || 'חדש'}</span>
+                        <h2 class="news-title">${item.title}</h2>
                     </div>
-                    <div class="news-body">${item.body || ''}</div>
+                    <div class="news-body">${processContent(item.body)}</div>
                     <div class="user-reactions">
-                        <button class="react-btn" onclick="handleReact(this)">🙏</button>
-                        <button class="react-btn" onclick="handleReact(this)">👍</button>
-                        <button class="react-btn" onclick="handleReact(this)">👎</button>
-                        <button class="react-btn" onclick="handleReact(this)">😥</button>
-                        <button class="react-btn" onclick="handleReact(this)">😀</button>
+                        <button class="react-btn" onclick="this.style.background='#d1e7dd'">🙏</button>
+                        <button class="react-btn" onclick="this.style.background='#d1e7dd'">👍</button>
+                        <button class="react-btn" onclick="this.style.background='#d1e7dd'">👎</button>
+                        <button class="react-btn" onclick="this.style.background='#d1e7dd'">😥</button>
+                        <button class="react-btn" onclick="this.style.background='#d1e7dd'">😀</button>
                     </div>
                 `;
-                list.appendChild(div);
+                container.appendChild(div);
             });
         });
 </script>
