@@ -3,8 +3,14 @@ import json
 
 # רשימת מקורות RSS
 rss_feeds = [
-    "https://rss.walla.co.il/feed/1",
-    "https://www.ynet.co.il/Integration/StoryRss2.xml"
+   rss_feeds = [
+    "https://www.a7.org/rss.xml", # ערוץ 7
+    "https://www.israelhayom.co.il/rss.xml", # ישראל היום
+    "https://www.now14.co.il/feed/", # ערוץ 14
+    "https://www.kikar.co.il/rss", # כיכר השבת
+    "https://www.bhol.co.il/rss", # בחדרי חרדים
+    "https://did.li/GvTYw" # אתר 0404 (מבזקים)
+]
 ]
 
 all_news = []
