@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>צופף חדשות - המערכת המלאה</title>
+    <title>צופף חדשות - המערכת המעודכנת</title>
     <style>
         :root { --main: #007bff; --bg: #f4f4f4; --card: #fff; --text: #222; }
         body { font-family: 'Segoe UI', system-ui, sans-serif; background: var(--bg); color: var(--text); margin: 0; padding: 0; }
@@ -11,48 +11,29 @@
         header { background: var(--main); color: white; padding: 15px; text-align: center; position: relative; box-shadow: 0 2px 10px rgba(0,0,0,0.1); z-index: 100; }
         .admin-toggle { position: absolute; top: 15px; left: 15px; background: none; border: none; font-size: 24px; cursor: pointer; color: white; }
 
-        .container { max-width: 1100px; margin: 0 auto; padding: 20px; display: flex; gap: 20px; align-items: flex-start; }
-        .feed { flex: 2.5; }
+        .container { max-width: 1200px; margin: 0 auto; padding: 20px; display: flex; gap: 25px; align-items: flex-start; }
+        .feed { flex: 3; }
         
-        /* מבזק */
         .news-card { background: var(--card); border-radius: 12px; padding: 20px; margin-bottom: 20px; border: 1px solid #ddd; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
-        .news-header { display: flex; justify-content: space-between; font-size: 0.85em; color: #666; margin-bottom: 10px; }
-        .news-title { font-size: 1.35em; font-weight: bold; margin: 0 0 12px 0; color: #111; border-right: 4px solid var(--main); padding-right: 10px; }
-        .news-img { width: 100%; max-height: 450px; object-fit: cover; border-radius: 8px; margin: 10px 0; }
-        .news-body { font-size: 1.1em; line-height: 1.6; white-space: pre-wrap; }
+        .news-header { display: flex; justify-content: space-between; font-size: 0.85em; color: #666; margin-bottom: 10px; font-weight: bold; }
+        .news-title { font-size: 1.4em; font-weight: bold; margin: 0 0 12px 0; color: #111; border-right: 5px solid var(--main); padding-right: 12px; line-height: 1.4; display: block; text-decoration: none; }
+        .news-img { width: 100%; max-height: 500px; object-fit: cover; border-radius: 8px; margin: 10px 0; }
+        .news-body { font-size: 1.15em; line-height: 1.6; white-space: pre-wrap; color: #444; }
 
-        /* תגובות */
         .reactions { display: flex; gap: 10px; margin-top: 15px; border-top: 1px solid #eee; padding-top: 12px; }
-        .react-btn { background: #f8f9fa; border: 1px solid #eee; border-radius: 20px; padding: 5px 12px; cursor: pointer; font-size: 1.1em; }
+        .react-btn { background: #f8f9fa; border: 1px solid #eee; border-radius: 20px; padding: 6px 15px; cursor: pointer; font-size: 1.1em; }
 
-        /* פרסומת על כל הצד */
-        .sidebar { flex: 1; min-width: 250px; position: sticky; top: 20px; align-self: flex-start; }
-        .ad-box { 
-            background: white; 
-            border: 2px solid #ffca28; 
-            border-radius: 12px; 
-            padding: 0; 
-            text-align: center; 
-            overflow: hidden;
-            min-height: 600px; /* נותן לה גובה התחלתי מרשים */
-            display: flex;
-            flex-direction: column;
-        }
-        .ad-label { background: #ffca28; color: #000; font-size: 0.75em; font-weight: bold; padding: 5px; text-transform: uppercase; }
-        .ad-content { padding: 15px; flex-grow: 1; display: flex; flex-direction: column; justify-content: center; }
-        .ad-img { width: 100%; height: auto; display: block; border-radius: 5px; }
+        /* פרסומת צד */
+        .sidebar { flex: 1; min-width: 280px; position: sticky; top: 20px; }
+        .ad-box { background: white; border: 3px solid #ffca28; border-radius: 15px; text-align: center; min-height: 500px; display: flex; flex-direction: column; overflow: hidden; }
+        .ad-label { background: #ffca28; color: #000; font-size: 0.8em; font-weight: bold; padding: 8px; }
+        .ad-content { padding: 20px; flex-grow: 1; display: flex; flex-direction: column; justify-content: center; }
 
-        /* לוח ניהול */
-        #admin-panel { display: none; background: white; border: 3px solid var(--main); padding: 25px; border-radius: 15px; margin: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); flex-direction: column; }
-        .admin-input { width: 100%; padding: 12px; margin: 8px 0; border: 1px solid #ccc; border-radius: 8px; box-sizing: border-box; font-size: 1em; }
-        .pub-btn { background: #28a745; color: white; border: none; padding: 12px; width: 100%; border-radius: 8px; font-weight: bold; cursor: pointer; margin-top: 10px; }
-        .copy-box { background: #fffbe6; border: 1px dashed #ffe58f; padding: 15px; margin-top: 15px; display: none; border-radius: 8px; }
-
-        @media (max-width: 900px) { 
-            .container { flex-direction: column; } 
-            .sidebar { width: 100%; position: static; }
-            .ad-box { min-height: auto; }
-        }
+        #admin-panel { display: none; background: white; border: 3px solid var(--main); padding: 25px; border-radius: 15px; margin: 20px; flex-direction: column; }
+        .admin-input { width: 100%; padding: 12px; margin: 8px 0; border: 1px solid #ccc; border-radius: 8px; }
+        .pub-btn { background: #28a745; color: white; border: none; padding: 15px; width: 100%; border-radius: 8px; font-weight: bold; cursor: pointer; }
+        
+        @media (max-width: 950px) { .container { flex-direction: column; } .sidebar { width: 100%; position: static; } }
     </style>
 </head>
 <body>
@@ -63,40 +44,27 @@
 </header>
 
 <div id="admin-panel" class="container">
-    <h2 style="margin:0 0 15px 0;">ניהול אתר (9188)</h2>
+    <h2>ניהול אתר (9188)</h2>
+    <input type="text" id="admTitle" class="admin-input" placeholder="כותרת המבזק">
+    <textarea id="admBody" class="admin-input" rows="3" placeholder="תוכן המבזק"></textarea>
+    <input type="text" id="admImg" class="admin-input" placeholder="קישור לתמונה">
+    <button class="pub-btn" onclick="genNews()">צור קוד למבזק</button>
     
-    <div style="background:#f9f9f9; padding:15px; border-radius:10px; margin-bottom:15px; border:1px solid #eee;">
-        <h4 style="margin-top:0">📢 עדכון פרסומת צד</h4>
-        <input type="text" id="adTxt" class="admin-input" placeholder="טקסט לפרסומת">
-        <input type="text" id="adImgLink" class="admin-input" placeholder="קישור לתמונה ארוכה לפרסומת">
-        <button class="pub-btn" style="background:#ffca28; color:black;" onclick="genAd()">הכן קוד לפרסומת</button>
-    </div>
-
-    <div style="background:#f9f9f9; padding:15px; border-radius:10px; border:1px solid #eee;">
-        <h4 style="margin-top:0">📰 הוספת מבזק</h4>
-        <input type="text" id="inTitle" class="admin-input" placeholder="כותרת">
-        <textarea id="inBody" class="admin-input" rows="3" placeholder="תוכן המבזק"></textarea>
-        <input type="text" id="inImg" class="admin-input" placeholder="קישור לתמונה">
-        <button class="pub-btn" onclick="genNews()">הכן מבזק לפרסום</button>
-    </div>
-
-    <div id="copyArea" class="copy-box">
-        <p><b>העתק את הקוד הבא והדבק ב-GitHub:</b></p>
-        <code id="finalJson" style="display:block; background:#eee; padding:10px; margin-bottom:10px; word-break: break-all; font-size:0.8em;"></code>
-        <button onclick="window.location.href='https://github.com/NETANEL-RABI/my-news-aggregator/edit/main/news.json'" style="padding:10px; cursor:pointer; width:100%;">עבור ל-GitHub</button>
+    <div id="copyArea" style="display:none; background:#fffbe6; padding:15px; margin-top:15px; border:1px dashed #ffca28;">
+        <code id="finalJson" style="display:block; word-break: break-all;"></code>
+        <button onclick="window.location.href='https://github.com/NETANEL-RABI/my-news-aggregator/edit/main/news.json'" style="margin-top:10px; width:100%; padding:10px; cursor:pointer;">העתק ולחץ כאן להדבקה ב-GitHub</button>
     </div>
 </div>
 
 <div class="container">
     <div class="feed" id="news-feed">טוען מבזקים...</div>
-    
     <aside class="sidebar">
         <div class="ad-box">
             <div class="ad-label">במה לפרסום</div>
-            <div class="ad-content" id="ad-view">
-                <p style="font-weight:bold;">המקום שלך לפרסם כאן!</p>
-                <p>צרו קשר לפרסום בולט על כל הצד</p>
-                <a href="mailto:s75247002@gmail.com" style="color:var(--main); font-weight:bold;">s75247002@gmail.com</a>
+            <div id="ad-view" class="ad-content">
+                <p><b>המקום שלך לפרסם כאן!</b></p>
+                <p>צרו קשר לפרסום על כל הצד</p>
+                <a href="mailto:s75247002@gmail.com">s75247002@gmail.com</a>
             </div>
         </div>
     </aside>
@@ -104,68 +72,49 @@
 
 <script>
     function toggleAdmin() { if(prompt("קוד ניהול:") === "9188") document.getElementById('admin-panel').style.display='flex'; }
-
+    
     function genNews() {
-        const entry = {
-            title: document.getElementById('inTitle').value,
-            body: document.getElementById('inBody').value,
-            image: document.getElementById('inImg').value,
-            time: new Date().toLocaleTimeString('he-IL', {hour:'2-digit', minute:'2-digit'}),
-            source: "מערכת"
-        };
-        showCopy(entry);
-    }
-
-    function genAd() {
-        const entry = {
-            type: "AD_SIDEBAR",
-            text: document.getElementById('adTxt').value,
-            image: document.getElementById('adImgLink').value
-        };
-        showCopy(entry);
-    }
-
-    function showCopy(obj) {
+        const obj = { title: document.getElementById('admTitle').value, body: document.getElementById('admBody').value, image: document.getElementById('admImg').value, time: new Date().toLocaleTimeString('he-IL',{hour:'2-digit',minute:'2-digit'}), source: "מנהל" };
         document.getElementById('finalJson').innerText = JSON.stringify(obj, null, 2) + ",";
         document.getElementById('copyArea').style.display = 'block';
     }
 
-    function loadData() {
+    function loadNews() {
         fetch('news.json?v=' + Date.now())
-            .then(r => r.json())
-            .then(data => {
+            .then(r => r.text())
+            .then(text => {
+                let clean = text.trim();
+                if(clean.startsWith(',')) clean = clean.substring(1);
+                const data = JSON.parse(clean);
                 const feed = document.getElementById('news-feed');
-                const adView = document.getElementById('ad-view');
                 feed.innerHTML = '';
 
                 data.forEach(item => {
                     if(item.type === "AD_SIDEBAR") {
-                        adView.innerHTML = `
-                            ${item.image ? `<img src="${item.image}" class="ad-img">` : ''}
-                            <p style="margin-top:15px; font-weight:bold;">${item.text}</p>
-                            <a href="mailto:s75247002@gmail.com" style="font-size:0.9em; color:blue;">לפרסום כאן לחצו</a>
-                        `;
+                        document.getElementById('ad-view').innerHTML = `${item.image ? `<img src="${item.image}" style="width:100%">` : ''}<p><b>${item.text}</b></p>`;
                     } else {
                         const card = document.createElement('div');
                         card.className = 'news-card';
+                        // תיקון ה-undefined: בודק אם יש link (מהבוט) או body (מהמנהל)
+                        const titleTag = item.link ? `<a href="${item.link}" target="_blank" class="news-title">${item.title}</a>` : `<div class="news-title">${item.title}</div>`;
+                        const bodyContent = item.body || "";
+                        const sourceInfo = item.source || "צופף";
+                        
                         card.innerHTML = `
-                            <div class="news-header"><span>${item.time} | צופף</span></div>
-                            <div class="news-title">${item.title}</div>
+                            <div class="news-header"><span>${item.time || 'עכשיו'} | ${sourceInfo}</span></div>
+                            ${titleTag}
                             ${item.image ? `<img src="${item.image}" class="news-img">` : ''}
-                            <div class="news-body">${item.body || ''}</div>
-                            <div class="reactions">
-                                <button class="react-btn">🙏</button><button class="react-btn">👍</button><button class="react-btn">😀</button>
-                            </div>
+                            <div class="news-body">${bodyContent}</div>
+                            <div class="reactions"><button class="react-btn">🙏</button><button class="react-btn">👍</button><button class="react-btn">😀</button></div>
                         `;
                         feed.appendChild(card);
                     }
                 });
-            });
+            }).catch(e => console.log("טוען..."));
     }
 
-    loadData();
-   // רענון האתר מול השרת כל 2 דקות (120,000 מילישניות)
-setInterval(loadData, 120000);
+    loadNews();
+    setInterval(loadNews, 60000); // רענון כל דקה
 </script>
 </body>
 </html>
