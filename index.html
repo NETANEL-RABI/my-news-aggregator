@@ -11,95 +11,99 @@
         
         body { font-family: 'Segoe UI', system-ui, sans-serif; background: var(--bg); color: var(--text); margin: 0; padding: 0; transition: 0.3s; }
 
-        /* פס מידע ובורסה */
-        .top-info-bar { background: #111; color: #fff; font-size: 0.8em; padding: 8px 0; display: flex; justify-content: center; gap: 25px; }
-        .info-item { display: flex; gap: 5px; font-weight: bold; }
+        /* פס מידע עליון */
+        .top-info-bar { background: #111; color: #fff; font-size: 0.85em; padding: 8px 0; display: flex; justify-content: center; gap: 30px; }
+        .info-item { display: flex; gap: 5px; font-weight: bold; align-items: center; }
         .up { color: #4caf50; }
 
         header { background: var(--main); color: white; padding: 20px; position: sticky; top: 0; z-index: 1000; box-shadow: 0 4px 10px rgba(0,0,0,0.2); }
         .header-content { max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; }
         
-        /* מזג אוויר בולט למעלה */
-        .weather-top { background: rgba(255,255,255,0.2); padding: 8px 15px; border-radius: 10px; text-align: center; font-weight: bold; border: 1px solid rgba(255,255,255,0.3); }
+        /* מזג אוויר למעלה */
+        .weather-top { background: rgba(255,255,255,0.2); padding: 10px 18px; border-radius: 12px; text-align: center; font-weight: bold; border: 1px solid rgba(255,255,255,0.3); line-height: 1.2; }
 
         .container { max-width: 1300px; margin: 20px auto; display: flex; gap: 20px; padding: 0 15px; }
         .feed { flex: 3; }
 
         /* פרסומת ענקית על כל הצד */
-        .sidebar { flex: 1; min-width: 300px; }
+        .sidebar { flex: 1; min-width: 320px; }
         .ad-sticky-full { 
             position: sticky; 
-            top: 110px; 
-            height: 85vh; /* גובה כמעט לכל המסך */
+            top: 120px; 
+            height: 82vh; 
             background: var(--card); 
-            border: 4px solid #ffca28; 
+            border: 5px solid #ffca28; 
             border-radius: 15px; 
             display: flex; 
             flex-direction: column; 
             overflow: hidden; 
             box-shadow: 0 10px 30px rgba(0,0,0,0.1);
         }
-        .ad-header { background: #ffca28; color: black; padding: 10px; font-weight: bold; text-align: center; font-size: 1.1em; }
-        .ad-body { flex-grow: 1; display: flex; flex-direction: column; justify-content: center; align-items: center; padding: 20px; text-align: center; }
-        .ad-img { max-width: 100%; height: auto; border-radius: 10px; margin-bottom: 20px; }
+        .ad-header { background: #ffca28; color: black; padding: 12px; font-weight: bold; text-align: center; font-size: 1.2em; border-bottom: 2px solid #e6b800; }
+        .ad-body { flex-grow: 1; display: flex; flex-direction: column; justify-content: center; align-items: center; padding: 25px; text-align: center; }
+        .ad-img { max-width: 100%; height: auto; border-radius: 10px; margin-bottom: 25px; box-shadow: 0 4px 8px rgba(0,0,0,0.1); }
+        .ad-email { background: var(--main); color: white; padding: 15px 20px; border-radius: 30px; text-decoration: none; font-weight: bold; font-size: 1.1em; transition: 0.2s; margin-top: 15px; display: block; width: 100%; box-sizing: border-box; }
+        .ad-email:hover { background: #003a7a; transform: scale(1.05); }
 
         /* כרטיס מבזק */
-        .news-card { background: var(--card); border-radius: 15px; margin-bottom: 25px; overflow: hidden; border: 1px solid #ddd; transition: 0.2s; }
-        .news-card.urgent { border-right: 10px solid var(--urgent); border-left: 1px solid var(--urgent); }
+        .news-card { background: var(--card); border-radius: 15px; margin-bottom: 25px; overflow: hidden; border: 1px solid #ddd; transition: 0.2s; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
+        .news-card.urgent { border-right: 12px solid var(--urgent); }
         .card-inner { padding: 25px; }
-        .news-title { font-size: 1.8em; font-weight: 800; color: var(--text); text-decoration: none; display: block; margin-bottom: 15px; line-height: 1.3; }
-        .news-img { width: 100%; height: auto; border-bottom: 1px solid #eee; }
+        .news-title { font-size: 1.85em; font-weight: 800; color: var(--text); text-decoration: none; display: block; margin-bottom: 12px; line-height: 1.35; }
+        .news-img { width: 100%; height: auto; border-bottom: 1px solid #eee; display: block; }
 
-        #admin-panel { display: none; background: #fff; border: 5px solid var(--main); padding: 30px; border-radius: 20px; margin: 20px; }
-        .comment-input { width: 100%; padding: 10px; margin-bottom: 10px; border: 1px solid #ccc; border-radius: 8px; }
+        #admin-panel { display: none; background: #fff; border: 6px solid var(--main); padding: 30px; border-radius: 20px; margin: 20px auto; max-width: 800px; box-shadow: 0 20px 40px rgba(0,0,0,0.2); }
+        .comment-input { width: 100%; padding: 12px; margin-bottom: 15px; border: 1px solid #ccc; border-radius: 8px; font-size: 1em; }
 
-        @media (max-width: 1000px) { .container { flex-direction: column; } .sidebar { width: 100%; } .ad-sticky-full { height: auto; position: static; } }
+        @media (max-width: 1000px) { .container { flex-direction: column; } .sidebar { width: 100%; } .ad-sticky-full { height: auto; position: static; min-height: 400px; } }
     </style>
 </head>
 <body>
 
 <div class="top-info-bar">
+    <div class="info-item">📅 <span id="hebrew-date">טוען תאריך...</span></div>
     <div class="info-item">💲 דולר: 3.72 <span class="up">▲</span></div>
-    <div class="info-item">🕯️ כניסת שבת: 18:42</div>
-    <div id="hebrew-date" class="info-item">טוען תאריך...</div>
+    <div class="info-item">📈 מדד ת"א: 1,942</div>
 </div>
 
 <header>
     <div class="header-content">
-        <button onclick="toggleAdmin()" style="background:none; border:none; color:white; font-size:24px; cursor:pointer;">⚙️</button>
+        <button onclick="toggleAdmin()" style="background:none; border:none; color:white; font-size:28px; cursor:pointer;">⚙️</button>
         <div style="text-align:center;">
-            <h1 style="margin:0; font-size:2em;">צופף חדשות</h1>
-            <span style="font-size:0.8em; opacity:0.8;">כל מה שקורה עכשיו</span>
+            <h1 style="margin:0; font-size:2.2em; letter-spacing: 1px;">צופף חדשות</h1>
+            <span style="font-size:0.9em; opacity:0.85; font-weight: bold;">עדכונים בזמן אמת מהשטח</span>
         </div>
         <div class="weather-top" id="weather">
-            ☀️ ירושלים<br>24°C
+            ☀️ ירושלים<br><span style="font-size: 1.2em;">24°C</span>
         </div>
     </div>
 </header>
 
 <div id="admin-panel">
-    <h3>ניהול אתר (9188)</h3>
+    <h2 style="margin-top:0;">לוח בקרה למנהל</h2>
     <input type="text" id="admTitle" class="comment-input" placeholder="כותרת המבזק">
     <textarea id="admBody" class="comment-input" rows="3" placeholder="תוכן המבזק..."></textarea>
     <input type="text" id="admImg" class="comment-input" placeholder="קישור לתמונה">
-    <label><input type="checkbox" id="admUrgent"> מבזק דחוף 🚨</label>
-    <button onclick="genNews()" style="background:var(--main); color:white; border:none; padding:15px; width:100%; border-radius:10px; cursor:pointer; font-weight:bold;">צור קוד ל-GitHub</button>
-    <div id="copyArea" style="display:none; margin-top:20px; background:#fffbe6; padding:10px; border:1px dashed #000;">
-        <code id="finalJson" style="font-size:0.8em; word-break:break-all;"></code>
+    <div style="margin-bottom: 15px;">
+        <label style="font-weight: bold; cursor: pointer;"><input type="checkbox" id="admUrgent"> סמן כמבזק דחוף (פס אדום) 🚨</label>
+    </div>
+    <button onclick="genNews()" style="background:#28a745; color:white; border:none; padding:18px; width:100%; border-radius:12px; cursor:pointer; font-weight:bold; font-size:1.1em;">צור קוד והעתק ל-GitHub</button>
+    <div id="copyArea" style="display:none; margin-top:20px; background:#fffbe6; padding:15px; border:1px dashed #000; border-radius: 8px;">
+        <code id="finalJson" style="font-size:0.85em; word-break:break-all;"></code>
     </div>
 </div>
 
 <div class="container">
-    <main class="feed" id="news-feed">טוען מבזקים...</main>
+    <main class="feed" id="news-feed">טוען מבזקים אחרונים...</main>
     
     <aside class="sidebar">
         <div class="ad-sticky-full">
-            <div class="ad-header">פרסום בצופף חדשות</div>
+            <div class="ad-header">שטח פרסום פנוי</div>
             <div class="ad-body" id="ad-content">
-                <img src="https://via.placeholder.com/300x500?text=Your+Ad+Here" class="ad-img" id="side-ad-img">
-                <h2 id="side-ad-text">המקום שלך לפרסם כאן!</h2>
-                <p>פרסום בולט על כל הצד שמגיע לכל הגולשים</p>
-                <a href="mailto:s75247002@gmail.com" style="background:var(--main); color:white; padding:12px 25px; border-radius:25px; text-decoration:none; font-weight:bold;">דברו איתנו במייל</a>
+                <img src="https://via.placeholder.com/300x450?text=%D7%9E%D7%A7%D7%95%D7%9D+%D7%9C%D7%A4%D7%A8%D7%A1%D7%95%D7%9D" class="ad-img" id="side-ad-img">
+                <h2 id="side-ad-text" style="margin: 0 0 10px 0;">רוצים להופיע כאן?</h2>
+                <p style="font-size: 1.1em; color: #555;">הפרסום שלכם יופיע על כל הצד בכל דפי האתר</p>
+                <a href="mailto:s75247002@gmail.com" class="ad-email">📧 שלחו מייל: s75247002@gmail.com</a>
             </div>
         </div>
     </aside>
@@ -141,10 +145,15 @@
                 card.innerHTML = `
                     ${item.image ? `<img src="${item.image}" class="news-img" onerror="this.style.display='none'">` : ''}
                     <div class="card-inner">
-                        <div style="font-size:0.85em; color:#777; margin-bottom:10px;">🕒 ${item.time || ''} | ${item.source || 'מבזק'}</div>
+                        <div style="font-size:0.9em; color:#777; margin-bottom:12px; display: flex; justify-content: space-between;">
+                            <span>🕒 ${item.time || ''}</span>
+                            <span style="color:var(--main); font-weight: bold;">● ${item.source || 'מבזק'}</span>
+                        </div>
                         <a href="${item.link || '#'}" target="_blank" class="news-title">${item.title}</a>
-                        <p>${item.body || ''}</p>
-                        <button onclick="window.open('https://wa.me/?text=${encodeURIComponent(item.title)}')" style="background:#25d366; color:white; border:none; padding:8px 15px; border-radius:20px; cursor:pointer; font-weight:bold;">שיתוף בוואטסאפ</button>
+                        <p style="font-size: 1.15em; line-height: 1.6;">${item.body || ''}</p>
+                        <div style="margin-top:20px;">
+                            <button onclick="window.open('https://wa.me/?text=${encodeURIComponent(item.title)}')" style="background:#25d366; color:white; border:none; padding:10px 20px; border-radius:25px; cursor:pointer; font-weight:bold; font-size: 1em;">📢 שיתוף בוואטסאפ</button>
+                        </div>
                     </div>
                 `;
                 feed.appendChild(card);
