@@ -11,11 +11,28 @@
         
         body { font-family: 'Segoe UI', system-ui, sans-serif; background: var(--bg); color: var(--text); margin: 0; padding: 0; transition: 0.3s; }
 
+        /* פס מידע עליון */
+        .top-info-bar { background: #111; color: #fff; font-size: 0.85em; padding: 8px 0; display: flex; justify-content: center; gap: 30px; }
+        .info-item { display: flex; gap: 5px; font-weight: bold; align-items: center; }
+
         header { background: var(--main); color: white; padding: 20px; position: sticky; top: 0; z-index: 1000; box-shadow: 0 4px 10px rgba(0,0,0,0.2); }
         .header-content { max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; }
         
+        /* מזג אוויר למעלה */
+        .weather-top { background: rgba(255,255,255,0.2); padding: 10px 18px; border-radius: 12px; text-align: center; font-weight: bold; border: 1px solid rgba(255,255,255,0.3); }
+
         .container { max-width: 1300px; margin: 20px auto; display: flex; gap: 20px; padding: 0 15px; }
         .feed { flex: 3; }
+
+        /* מודעת פרסום על כל הצד */
+        .sidebar { flex: 1; min-width: 320px; }
+        .ad-sticky-full { 
+            position: sticky; top: 120px; height: 82vh; background: var(--card); border: 5px solid #ffca28; border-radius: 15px; 
+            display: flex; flex-direction: column; overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.1); text-align: center;
+        }
+        .ad-header { background: #ffca28; color: black; padding: 12px; font-weight: bold; font-size: 1.2em; }
+        .ad-body { flex-grow: 1; display: flex; flex-direction: column; justify-content: center; padding: 20px; }
+        .ad-email-btn { background: var(--main); color: white; padding: 15px; border-radius: 30px; text-decoration: none; font-weight: bold; margin-top: 20px; display: block; }
 
         /* כרטיס מבזק */
         .news-card { background: var(--card); border-radius: 15px; margin-bottom: 25px; overflow: hidden; border: 1px solid #ddd; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
@@ -24,24 +41,14 @@
         .news-title { font-size: 1.8em; font-weight: 800; color: var(--text); text-decoration: none; display: block; margin-bottom: 12px; line-height: 1.35; }
         .news-img { width: 100%; height: auto; border-bottom: 1px solid #eee; display: block; }
 
-        /* מערכת לייקים ורגשות */
-        .reactions-bar { display: flex; gap: 10px; margin-top: 15px; padding-top: 15px; border-top: 1px solid #eee; flex-wrap: wrap; }
+        /* מערכת לייקים 👍 👎 ❤️ */
+        .reactions-bar { display: flex; gap: 10px; margin-top: 15px; padding-top: 15px; border-top: 1px solid #eee; }
         .react-btn { 
-            background: #f0f2f5; border: none; padding: 8px 12px; border-radius: 20px; 
-            cursor: pointer; font-size: 0.9em; display: flex; align-items: center; gap: 5px; 
-            transition: 0.2s; font-weight: bold;
+            background: #f0f2f5; border: none; padding: 8px 15px; border-radius: 20px; 
+            cursor: pointer; font-weight: bold; display: flex; align-items: center; gap: 5px; transition: 0.2s;
         }
         .react-btn:hover { background: #e4e6eb; }
         .react-btn.active { background: #007bff; color: white; }
-        .react-btn span { font-size: 1.1em; }
-
-        /* צד שמאל - מודעה */
-        .sidebar { flex: 1; min-width: 320px; }
-        .ad-sticky-full { 
-            position: sticky; top: 120px; height: 82vh; background: var(--card); border: 5px solid #ffca28; border-radius: 15px; 
-            display: flex; flex-direction: column; overflow: hidden; text-align: center;
-        }
-        .ad-email { background: var(--main); color: white; padding: 15px; border-radius: 30px; text-decoration: none; font-weight: bold; margin: 15px; display: block; }
 
         #admin-panel { display: none; background: #fff; border: 6px solid var(--main); padding: 30px; border-radius: 20px; margin: 20px auto; max-width: 800px; }
 
@@ -50,18 +57,23 @@
 </head>
 <body>
 
+<div class="top-info-bar">
+    <div class="info-item">📅 <span id="hebrew-date">טוען תאריך...</span></div>
+    <div class="info-item">💲 דולר: 3.72</div>
+</div>
+
 <header>
     <div class="header-content">
         <button onclick="toggleAdmin()" style="background:none; border:none; color:white; font-size:28px; cursor:pointer;">⚙️</button>
-        <h1 style="margin:0;">צופף חדשות 🗞️</h1>
-        <div id="weather">☀️ 24°C</div>
+        <h1 style="margin:0;">צופף חדשות</h1>
+        <div class="weather-top" id="weather">☀️ 24°C</div>
     </div>
 </header>
 
 <div id="admin-panel">
-    <h3>הוספת מבזק למנהל</h3>
-    <input type="text" id="admTitle" style="width:100%; padding:12px; margin-bottom:10px;" placeholder="כותרת...">
-    <textarea id="admBody" style="width:100%; padding:12px; margin-bottom:10px;" rows="3" placeholder="תוכן..."></textarea>
+    <h3>ניהול מבזקים (9188)</h3>
+    <input type="text" id="admTitle" style="width:100%; padding:12px; margin-bottom:10px;" placeholder="כותרת המבזק">
+    <textarea id="admBody" style="width:100%; padding:12px; margin-bottom:10px;" rows="3" placeholder="תוכן המבזק..."></textarea>
     <input type="text" id="admImg" style="width:100%; padding:12px; margin-bottom:10px;" placeholder="קישור לתמונה">
     <label><input type="checkbox" id="admUrgent"> סמן כדחוף 🚨</label>
     <button onclick="genNews()" style="background:green; color:white; padding:15px; width:100%; border:none; border-radius:10px; cursor:pointer; font-weight:bold; margin-top:10px;">פרסם מבזק</button>
@@ -73,11 +85,12 @@
     
     <aside class="sidebar">
         <div class="ad-sticky-full">
-            <div style="background:#ffca28; padding:12px; font-weight:bold;">שטח פרסום 📢</div>
-            <div style="flex-grow:1; display:flex; flex-direction:column; justify-content:center; padding:20px;">
-                <img src="https://via.placeholder.com/300x400?text=AD" style="max-width:100%; border-radius:10px; margin-bottom:20px;">
-                <h3>רוצים לפרסם כאן?</h3>
-                <a href="mailto:s75247002@gmail.com" class="ad-email">📧 s75247002@gmail.com</a>
+            <div class="ad-header">שטח פרסום פנוי 📢</div>
+            <div class="ad-body">
+                <img src="https://via.placeholder.com/300x400?text=%D7%9E%D7%A7%D7%95%D7%9D+%D7%9C%D7%A4%D7%A8%D7%A1%D7%95%D7%9D" style="max-width:100%; border-radius:10px;">
+                <h2>רוצים לפרסם כאן?</h2>
+                <p>הפרסום שלכם יופיע לכל הגולשים במיקום הכי בולט באתר</p>
+                <a href="mailto:s75247002@gmail.com" class="ad-email-btn">📧 שלחו מייל: s75247002@gmail.com</a>
             </div>
         </div>
     </aside>
@@ -86,16 +99,18 @@
 <script>
     let allData = [];
 
+    // אימוג'י אוטומטי לפי מילות מפתח
     function getEmoji(title) {
         title = title.toLowerCase();
         if (title.includes("ירי") || title.includes("פיגוע") || title.includes("צהל")) return "🚨";
-        if (title.includes("שבת") || title.includes("רב")) return "🕍";
         if (title.includes("תאונה") || title.includes("רכב")) return "🚗";
+        if (title.includes("שבת") || title.includes("רב") || title.includes("תפילה")) return "🕍";
+        if (title.includes("כסף") || title.includes("דולר") || title.includes("כלכלה")) return "💰";
         return "🔹";
     }
 
-    // פונקציית הלייקים - שומרת בדפדפן של המשתמש
-    function handleReaction(btn, type) {
+    // פונקציית הלייקים - מוגדרת להתחיל מ-0
+    function handleReaction(btn) {
         const countSpan = btn.querySelector('.count');
         let count = parseInt(countSpan.innerText);
         if (btn.classList.contains('active')) {
@@ -107,7 +122,8 @@
         }
     }
 
-    function toggleAdmin() { if(prompt("קוד מנהל:") === "9188") document.getElementById('admin-panel').style.display='block'; }
+    function toggleAdmin() { if(prompt("קוד ניהול:") === "9188") document.getElementById('admin-panel').style.display='block'; }
+    function updateDate() { document.getElementById('hebrew-date').innerText = new Hebcal.HDate().toString('h'); }
 
     function genNews() {
         const obj = {
@@ -125,27 +141,22 @@
     function renderNews(data) {
         const feed = document.getElementById('news-feed');
         feed.innerHTML = '';
-        data.forEach((item, index) => {
+        data.forEach((item) => {
             const card = document.createElement('article');
             card.className = `news-card ${item.urgent ? 'urgent' : ''}`;
             const emoji = getEmoji(item.title);
             
-            // מספרים רנדומליים ראשוניים כדי שהאתר יראה פעיל
-            const rndLike = Math.floor(Math.random() * 0);
-            const rndDislike = Math.floor(Math.random() * 0);
-            const rndHeart = Math.floor(Math.random() * 0);
-
             card.innerHTML = `
                 ${item.image ? `<img src="${item.image}" class="news-img" onerror="this.style.display='none'">` : ''}
                 <div class="card-inner">
-                    <div style="font-size:0.85em; color:#777; margin-bottom:10px;">🕒 ${item.time || ''} | ${item.source || 'מבזק'}</div>
+                    <div style="font-size:0.9em; color:#777; margin-bottom:10px;">🕒 ${item.time || ''} | ${item.source || 'מבזק'}</div>
                     <a href="${item.link || '#'}" target="_blank" class="news-title"><span>${emoji}</span> ${item.title}</a>
                     <p>${item.body || ''}</p>
                     
                     <div class="reactions-bar">
-                        <button class="react-btn" onclick="handleReaction(this, 'like')"><span>👍</span> <span class="count">${rndLike}</span></button>
-                        <button class="react-btn" onclick="handleReaction(this, 'dislike')"><span>👎</span> <span class="count">${rndDislike}</span></button>
-                        <button class="react-btn" onclick="handleReaction(this, 'heart')"><span>❤️</span> <span class="count">${rndHeart}</span></button>
+                        <button class="react-btn" onclick="handleReaction(this)"><span>👍</span> <span class="count">0</span></button>
+                        <button class="react-btn" onclick="handleReaction(this)"><span>👎</span> <span class="count">0</span></button>
+                        <button class="react-btn" onclick="handleReaction(this)"><span>❤️</span> <span class="count">0</span></button>
                         <button onclick="window.open('https://wa.me/?text=${encodeURIComponent(item.title)}')" style="background:none; border:none; color:#25d366; cursor:pointer; font-weight:bold; margin-right:auto;">🟢 שתף בוואטסאפ</button>
                     </div>
                 </div>
@@ -161,8 +172,7 @@
         });
     }
 
-    loadNews();
-    setInterval(loadNews, 60000);
+    updateDate(); loadNews(); setInterval(loadNews, 60000);
 </script>
 </body>
 </html>
