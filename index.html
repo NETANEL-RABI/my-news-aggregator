@@ -11,11 +11,17 @@
         .container { max-width: 1200px; margin: 20px auto; display: flex; gap: 20px; padding: 0 15px; }
         .feed { flex: 3; }
         .sidebar { flex: 1; min-width: 300px; }
+        
         .news-card { background: var(--card); border-radius: 12px; margin-bottom: 20px; padding: 20px; border: 1px solid #ddd; box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
         .news-title { font-size: 1.5em; font-weight: bold; color: #000; text-decoration: none; display: block; margin-bottom: 10px; }
+        
+        /* עיצוב הספוילר/כתבה מלאה */
+        .full-text { display: none; margin-top: 10px; padding: 10px; background: #f0f4f8; border-right: 4px solid var(--main); line-height: 1.6; color: #333; }
+        .read-more-btn { background: #eee; border: none; padding: 8px 15px; border-radius: 5px; cursor: pointer; font-weight: bold; font-size: 0.9em; color: var(--main); margin-top: 10px; }
+        .read-more-btn:hover { background: #e0e0e0; }
+
         .ad-box { position: sticky; top: 100px; background: #fff; border: 4px solid #ffca28; border-radius: 15px; padding: 20px; text-align: center; }
         .ad-btn { background: var(--main); color: white; padding: 12px; border-radius: 25px; text-decoration: none; display: block; margin-top: 15px; font-weight: bold; }
-        .error-msg { background: #fee; color: #b00; padding: 20px; border-radius: 10px; text-align: center; font-weight: bold; border: 1px solid #fcc; }
     </style>
 </head>
 <body>
@@ -26,7 +32,7 @@
 
 <div class="container">
     <main class="feed" id="news-feed">
-        <div style="text-align:center; padding:50px;">טוען מבזקים אחרונים... 🔄</div>
+        <div style="text-align:center; padding:50px;">טוען מבזקים... 🔄</div>
     </main>
 
     <aside class="sidebar">
@@ -39,18 +45,26 @@
 </div>
 
 <script>
+    // פונקציה לפתיחה/סגירה של הכתבה
+    function toggleText(btn) {
+        const fullText = btn.nextElementSibling;
+        if (fullText.style.display === "block") {
+            fullText.style.display = "none";
+            btn.innerText = "לכתבה המלאה (ספוילר) 👇";
+        } else {
+            fullText.style.display = "block";
+            btn.innerText = "סגור כתבה 👆";
+        }
+    }
+
     async function loadNews() {
         const feed = document.getElementById('news-feed');
         try {
-            // הוספת מזהה זמן כדי למנוע טעינת נתונים ישנים מהדפדפן
             const response = await fetch('news.json?v=' + new Date().getTime());
-            
-            if (!response.ok) throw new Error("לא מצליח למצוא את קובץ החדשות");
-            
             const data = await response.json();
             
             if (!data || data.length === 0) {
-                feed.innerHTML = '<div class="error-msg">הקובץ ריק. המתן לעדכון הבוט...</div>';
+                feed.innerHTML = '<div>אין חדשות כרגע.</div>';
                 return;
             }
 
@@ -58,25 +72,26 @@
             data.forEach(item => {
                 const card = document.createElement('div');
                 card.className = 'news-card';
+                
+                // בודקים אם יש כתבה מלאה ב-JSON, אם לא - משתמשים ב-body רגיל
+                const mainContent = item.body || "אין תוכן נוסף";
+
                 card.innerHTML = `
                     <div style="font-size:0.85em; color:#777; margin-bottom:5px;">🕒 ${item.time || ''} | ${item.source || 'צופף'}</div>
                     <div class="news-title">${item.title}</div>
-                    <p>${item.body || ''}</p>
+                    
+                    <button class="read-more-btn" onclick="toggleText(this)">לכתבה המלאה (ספוילר) 👇</button>
+                    <div class="full-text">${mainContent}</div>
                 `;
                 feed.appendChild(card);
             });
         } catch (error) {
-            console.error(error);
-            feed.innerHTML = `
-                <div class="error-msg">
-                    שגיאה בטעינת החדשות.<br>
-                    וודא שקובץ news.json קיים ב-GitHub ומכיל נתונים תקינים.
-                </div>`;
+            feed.innerHTML = '<div style="color:red; text-align:center;">שגיאה בטעינת החדשות.</div>';
         }
     }
 
     loadNews();
-    setInterval(loadNews, 30000); // רענון כל 30 שניות
+    setInterval(loadNews, 30000);
 </script>
 </body>
 </html>
