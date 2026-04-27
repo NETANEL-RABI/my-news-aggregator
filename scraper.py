@@ -4,12 +4,18 @@ import json
 # רשימת מקורות RSS
 rss_feeds = [
    rss_feeds = [
-    "https://www.a7.org/rss.xml", # ערוץ 7
-    "https://www.israelhayom.co.il/rss.xml", # ישראל היום
-    "https://www.now14.co.il/feed/", # ערוץ 14
-    "https://www.kikar.co.il/rss", # כיכר השבת
-    "https://www.bhol.co.il/rss", # בחדרי חרדים
-    "https://did.li/GvTYw" # אתר 0404 (מבזקים)
+   rss_feeds = [
+    "https://www.now14.co.il/feed/",              # ערוץ 14
+    "https://www.kol-barama.co.il/feed/",        # קול ברמה
+    "https://www.93fm.co.il/feed/",              # קול חי
+    "https://hm-news.co.il/feed/",               # המחדש
+    "https://www.a7.org/rss.xml",                # ערוץ 7
+    "https://www.israelhayom.co.il/rss.xml",     # ישראל היום
+    "https://www.kikar.co.il/rss",               # כיכר השבת
+    "https://www.bhol.co.il/rss",                # בחדרי חרדים
+    "https://www.jdn.co.il/feed/",               # JDN
+    "https://www.0404.co.il/?feed=rss2"          # 0404
+]
 ]
 ]
 
