@@ -131,9 +131,9 @@
             const emoji = getEmoji(item.title);
             
             // מספרים רנדומליים ראשוניים כדי שהאתר יראה פעיל
-            const rndLike = Math.floor(Math.random() * 50);
-            const rndDislike = Math.floor(Math.random() * 10);
-            const rndHeart = Math.floor(Math.random() * 30);
+            const rndLike = Math.floor(Math.random() * 0);
+            const rndDislike = Math.floor(Math.random() * 0);
+            const rndHeart = Math.floor(Math.random() * 0);
 
             card.innerHTML = `
                 ${item.image ? `<img src="${item.image}" class="news-img" onerror="this.style.display='none'">` : ''}
