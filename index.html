@@ -8,12 +8,11 @@
         :root { --main: #007bff; --bg: #f4f4f4; --card: #fff; --text: #222; }
         body { font-family: 'Segoe UI', system-ui, sans-serif; background: var(--bg); color: var(--text); margin: 0; padding: 0; }
         
-        /* כותרת */
-        header { background: var(--main); color: white; padding: 15px; text-align: center; position: relative; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+        header { background: var(--main); color: white; padding: 15px; text-align: center; position: relative; box-shadow: 0 2px 10px rgba(0,0,0,0.1); z-index: 100; }
         .admin-toggle { position: absolute; top: 15px; left: 15px; background: none; border: none; font-size: 24px; cursor: pointer; color: white; }
 
-        .container { max-width: 900px; margin: 20px auto; padding: 10px; display: flex; gap: 20px; }
-        .feed { flex: 3; }
+        .container { max-width: 1100px; margin: 0 auto; padding: 20px; display: flex; gap: 20px; align-items: flex-start; }
+        .feed { flex: 2.5; }
         
         /* מבזק */
         .news-card { background: var(--card); border-radius: 12px; padding: 20px; margin-bottom: 20px; border: 1px solid #ddd; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
@@ -22,29 +21,38 @@
         .news-img { width: 100%; max-height: 450px; object-fit: cover; border-radius: 8px; margin: 10px 0; }
         .news-body { font-size: 1.1em; line-height: 1.6; white-space: pre-wrap; }
 
-        /* סקר וספוילר */
-        .poll-box { background: #f9f9f9; border: 1px solid #ddd; padding: 15px; border-radius: 8px; margin-top: 10px; }
-        .poll-opt { background: white; border: 1px solid #ccc; padding: 8px; margin: 5px 0; border-radius: 5px; text-align: center; cursor: pointer; font-weight: bold; }
-        .spoiler { background: #333; color: #333; cursor: pointer; padding: 0 5px; border-radius: 3px; }
-        .spoiler.open { background: #eee; color: inherit; }
-
         /* תגובות */
         .reactions { display: flex; gap: 10px; margin-top: 15px; border-top: 1px solid #eee; padding-top: 12px; }
         .react-btn { background: #f8f9fa; border: 1px solid #eee; border-radius: 20px; padding: 5px 12px; cursor: pointer; font-size: 1.1em; }
 
-        /* פרסומת בצד */
-        .sidebar { flex: 1; }
-        .ad-box { background: white; border: 2px solid #ffca28; border-radius: 12px; padding: 20px; text-align: center; position: sticky; top: 20px; }
-        .ad-img { width: 100%; border-radius: 5px; margin-top: 10px; }
+        /* פרסומת על כל הצד */
+        .sidebar { flex: 1; min-width: 250px; position: sticky; top: 20px; align-self: flex-start; }
+        .ad-box { 
+            background: white; 
+            border: 2px solid #ffca28; 
+            border-radius: 12px; 
+            padding: 0; 
+            text-align: center; 
+            overflow: hidden;
+            min-height: 600px; /* נותן לה גובה התחלתי מרשים */
+            display: flex;
+            flex-direction: column;
+        }
+        .ad-label { background: #ffca28; color: #000; font-size: 0.75em; font-weight: bold; padding: 5px; text-transform: uppercase; }
+        .ad-content { padding: 15px; flex-grow: 1; display: flex; flex-direction: column; justify-content: center; }
+        .ad-img { width: 100%; height: auto; display: block; border-radius: 5px; }
 
         /* לוח ניהול */
         #admin-panel { display: none; background: white; border: 3px solid var(--main); padding: 25px; border-radius: 15px; margin: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); flex-direction: column; }
         .admin-input { width: 100%; padding: 12px; margin: 8px 0; border: 1px solid #ccc; border-radius: 8px; box-sizing: border-box; font-size: 1em; }
-        .admin-section { border: 1px solid #eee; padding: 15px; border-radius: 10px; margin-bottom: 15px; }
-        .pub-btn { background: #28a745; color: white; border: none; padding: 12px; width: 100%; border-radius: 8px; font-weight: bold; cursor: pointer; }
+        .pub-btn { background: #28a745; color: white; border: none; padding: 12px; width: 100%; border-radius: 8px; font-weight: bold; cursor: pointer; margin-top: 10px; }
         .copy-box { background: #fffbe6; border: 1px dashed #ffe58f; padding: 15px; margin-top: 15px; display: none; border-radius: 8px; }
 
-        @media (max-width: 768px) { .container { flex-direction: column; } .sidebar { order: -1; } }
+        @media (max-width: 900px) { 
+            .container { flex-direction: column; } 
+            .sidebar { width: 100%; position: static; }
+            .ad-box { min-height: auto; }
+        }
     </style>
 </head>
 <body>
@@ -55,38 +63,40 @@
 </header>
 
 <div id="admin-panel" class="container">
-    <h2 style="margin:0 0 15px 0;">מרכז ניהול (9188)</h2>
+    <h2 style="margin:0 0 15px 0;">ניהול אתר (9188)</h2>
     
-    <div class="admin-section">
-        <h4>📢 עדכון פרסומת</h4>
+    <div style="background:#f9f9f9; padding:15px; border-radius:10px; margin-bottom:15px; border:1px solid #eee;">
+        <h4 style="margin-top:0">📢 עדכון פרסומת צד</h4>
         <input type="text" id="adTxt" class="admin-input" placeholder="טקסט לפרסומת">
-        <input type="text" id="adImgLink" class="admin-input" placeholder="קישור לתמונת פרסומת (אופציונלי)">
+        <input type="text" id="adImgLink" class="admin-input" placeholder="קישור לתמונה ארוכה לפרסומת">
         <button class="pub-btn" style="background:#ffca28; color:black;" onclick="genAd()">הכן קוד לפרסומת</button>
     </div>
 
-    <div class="admin-section">
-        <h4>📰 הוספת מבזק חדש</h4>
-        <input type="text" id="inTitle" class="admin-input" placeholder="כותרת המבזק">
-        <textarea id="inBody" class="admin-input" rows="3" placeholder="תוכן המבזק... (אפשר לשלב אימוג'ים, סקרים וכו')"></textarea>
-        <input type="text" id="inImg" class="admin-input" placeholder="קישור לתמונה למבזק (אופציונלי)">
+    <div style="background:#f9f9f9; padding:15px; border-radius:10px; border:1px solid #eee;">
+        <h4 style="margin-top:0">📰 הוספת מבזק</h4>
+        <input type="text" id="inTitle" class="admin-input" placeholder="כותרת">
+        <textarea id="inBody" class="admin-input" rows="3" placeholder="תוכן המבזק"></textarea>
+        <input type="text" id="inImg" class="admin-input" placeholder="קישור לתמונה">
         <button class="pub-btn" onclick="genNews()">הכן מבזק לפרסום</button>
     </div>
 
     <div id="copyArea" class="copy-box">
-        <p><b>העתק את הקוד הבא:</b></p>
+        <p><b>העתק את הקוד הבא והדבק ב-GitHub:</b></p>
         <code id="finalJson" style="display:block; background:#eee; padding:10px; margin-bottom:10px; word-break: break-all; font-size:0.8em;"></code>
-        <button onclick="window.location.href='https://github.com/NETANEL-RABI/my-news-aggregator/edit/main/news.json'" style="padding:10px; cursor:pointer; width:100%;">לחץ כאן למעבר ל-GitHub והדבק בשורה הראשונה</button>
+        <button onclick="window.location.href='https://github.com/NETANEL-RABI/my-news-aggregator/edit/main/news.json'" style="padding:10px; cursor:pointer; width:100%;">עבור ל-GitHub</button>
     </div>
 </div>
 
 <div class="container">
     <div class="feed" id="news-feed">טוען מבזקים...</div>
+    
     <aside class="sidebar">
-        <div class="ad-box" id="ad-box-view">
-            <h4 style="margin:0; color:#ffca28;">פרסום</h4>
-            <div id="ad-content-view">
-                <p>המקום שלך לפרסם כאן!</p>
-                <a href="mailto:s75247002@gmail.com" style="color:var(--main); font-weight:bold;">צרו קשר</a>
+        <div class="ad-box">
+            <div class="ad-label">במה לפרסום</div>
+            <div class="ad-content" id="ad-view">
+                <p style="font-weight:bold;">המקום שלך לפרסם כאן!</p>
+                <p>צרו קשר לפרסום בולט על כל הצד</p>
+                <a href="mailto:s75247002@gmail.com" style="color:var(--main); font-weight:bold;">s75247002@gmail.com</a>
             </div>
         </div>
     </aside>
@@ -95,7 +105,6 @@
 <script>
     function toggleAdmin() { if(prompt("קוד ניהול:") === "9188") document.getElementById('admin-panel').style.display='flex'; }
 
-    // פונקציות יצירת קוד למנהל
     function genNews() {
         const entry = {
             title: document.getElementById('inTitle').value,
@@ -109,7 +118,7 @@
 
     function genAd() {
         const entry = {
-            type: "AD_UPDATE",
+            type: "AD_SIDEBAR",
             text: document.getElementById('adTxt').value,
             image: document.getElementById('adImgLink').value
         };
@@ -119,46 +128,33 @@
     function showCopy(obj) {
         document.getElementById('finalJson').innerText = JSON.stringify(obj, null, 2) + ",";
         document.getElementById('copyArea').style.display = 'block';
-        window.scrollTo({top: document.getElementById('copyArea').offsetTop, behavior: 'smooth'});
-    }
-
-    // עיבוד תוכן מיוחד (סקרים/ספוילרים)
-    function parseContent(text) {
-        if(!text) return "";
-        let content = text;
-        if(content.includes("[POLL]")) {
-            const p = content.split("|");
-            let h = `<div class="poll-box"><strong>סקר: ${p[0].replace("[POLL]","")}</strong>`;
-            for(let i=1; i<p.length; i++) h += `<div class="poll-opt" onclick="alert('תודה!')">${p[i]}</div>`;
-            return h + `</div>`;
-        }
-        return content;
     }
 
     function loadData() {
-        fetch('news.json?nocache=' + Date.now())
+        fetch('news.json?v=' + Date.now())
             .then(r => r.json())
             .then(data => {
                 const feed = document.getElementById('news-feed');
-                const adView = document.getElementById('ad-content-view');
+                const adView = document.getElementById('ad-view');
                 feed.innerHTML = '';
 
                 data.forEach(item => {
-                    if(item.type === "AD_UPDATE") {
-                        adView.innerHTML = `<p><b>${item.text}</b></p>${item.image ? `<img src="${item.image}" class="ad-img">` : ''}<br><a href="mailto:s75247002@gmail.com" style="font-size:0.8em;">לפרסום לחצו כאן</a>`;
+                    if(item.type === "AD_SIDEBAR") {
+                        adView.innerHTML = `
+                            ${item.image ? `<img src="${item.image}" class="ad-img">` : ''}
+                            <p style="margin-top:15px; font-weight:bold;">${item.text}</p>
+                            <a href="mailto:s75247002@gmail.com" style="font-size:0.9em; color:blue;">לפרסום כאן לחצו</a>
+                        `;
                     } else {
                         const card = document.createElement('div');
                         card.className = 'news-card';
                         card.innerHTML = `
-                            <div class="news-header"><span>${item.time || 'עכשיו'} | ${item.source || 'צופף'}</span></div>
+                            <div class="news-header"><span>${item.time} | צופף</span></div>
                             <div class="news-title">${item.title}</div>
-                            ${item.image ? `<img src="${item.image}" class="news-img" onerror="this.style.display='none'">` : ''}
-                            <div class="news-body">${parseContent(item.body)}</div>
+                            ${item.image ? `<img src="${item.image}" class="news-img">` : ''}
+                            <div class="news-body">${item.body || ''}</div>
                             <div class="reactions">
-                                <button class="react-btn" onclick="this.style.background='#d1e7dd'">🙏</button>
-                                <button class="react-btn" onclick="this.style.background='#d1e7dd'">👍</button>
-                                <button class="react-btn" onclick="this.style.background='#d1e7dd'">😥</button>
-                                <button class="react-btn" onclick="this.style.background='#d1e7dd'">😀</button>
+                                <button class="react-btn">🙏</button><button class="react-btn">👍</button><button class="react-btn">😀</button>
                             </div>
                         `;
                         feed.appendChild(card);
@@ -168,7 +164,7 @@
     }
 
     loadData();
-    setInterval(loadData, 40000); // רענון אוטומטי כל 40 שניות
+    setInterval(loadData, 40000);
 </script>
 </body>
 </html>
