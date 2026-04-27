@@ -3,39 +3,35 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>צופף חדשות - המערכת המושלמת</title>
+    <title>צופף חדשות</title>
     <style>
         :root { --main: #007bff; --dark: #333; --light: #f4f4f4; --text: #222; --card: #fff; }
         body.dark-mode { --bg: #1a1a1a; --text: #eee; --card: #2d2d2d; --light: #444; }
         body { font-family: 'Segoe UI', system-ui, sans-serif; background: var(--bg, var(--light)); color: var(--text); margin: 0; transition: 0.3s; }
         
-        /* כותרת ומבזק רץ */
-        header { background: var(--main); color: white; padding: 15px; text-align: center; position: relative; }
-        .ticker-wrap { background: #000; color: #ffca28; padding: 5px 0; overflow: hidden; font-size: 0.9em; font-weight: bold; }
-        .ticker { display: inline-block; white-space: nowrap; animation: ticker 30s linear infinite; }
-        @keyframes ticker { 0% { transform: translateX(-100%); } 100% { transform: translateX(100%); } }
-
-        /* כפתורי צד */
+        /* כותרת */
+        header { background: var(--main); color: white; padding: 15px; text-align: center; position: relative; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+        
         .top-btns { position: absolute; top: 15px; left: 15px; display: flex; gap: 10px; }
         .icon-btn { background: none; border: none; color: white; font-size: 20px; cursor: pointer; }
 
         /* פריסה */
         .main-layout { display: flex; max-width: 1200px; margin: auto; gap: 20px; padding: 20px; }
         .content { flex: 3; }
-        .news-card { background: var(--card); border-radius: 12px; padding: 20px; margin-bottom: 15px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); }
+        .news-card { background: var(--card); border-radius: 12px; padding: 20px; margin-bottom: 15px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); border: 1px solid #ddd; }
         .news-time { color: var(--main); font-weight: bold; font-size: 0.85em; }
-        .news-title { font-size: 1.25em; margin: 10px 0; display: block; text-decoration: none; color: inherit; }
-        .news-body { font-size: 1.05em; line-height: 1.6; }
+        .news-title { font-size: 1.25em; margin: 10px 0; font-weight: bold; display: block; color: inherit; text-decoration: none; }
+        .news-body { font-size: 1.05em; line-height: 1.6; white-space: pre-wrap; }
 
         /* סקר וספוילר */
-        .poll-box { background: var(--light); padding: 15px; border-radius: 8px; margin-top: 15px; }
-        .poll-opt { background: var(--card); border: 1px solid #ccc; padding: 8px; margin: 5px 0; border-radius: 5px; text-align: center; cursor: pointer; }
+        .poll-box { background: var(--light); padding: 15px; border-radius: 8px; margin-top: 15px; border: 1px solid #ccc; }
+        .poll-opt { background: var(--card); border: 1px solid #bbb; padding: 8px; margin: 5px 0; border-radius: 5px; text-align: center; cursor: pointer; }
         .spoiler { background: #555; color: #555; cursor: pointer; padding: 0 5px; border-radius: 3px; }
         .spoiler.open { background: none; color: inherit; }
 
         /* תגובות */
         .reactions { display: flex; gap: 10px; margin-top: 15px; border-top: 1px solid var(--light); padding-top: 10px; }
-        .react-btn { background: var(--light); border: none; border-radius: 20px; padding: 5px 12px; cursor: pointer; font-size: 1.1em; }
+        .react-btn { background: var(--light); border: 1px solid #eee; border-radius: 20px; padding: 5px 12px; cursor: pointer; font-size: 1.1em; }
 
         /* פרסומת */
         .sidebar { flex: 1; }
@@ -43,9 +39,9 @@
 
         /* לוח ניהול */
         #admin-panel { display: none; background: var(--card); border: 2px solid var(--main); margin: 20px; padding: 20px; border-radius: 12px; }
+        .admin-input { width: 100%; padding: 12px; margin-bottom: 10px; border: 1px solid #ccc; border-radius: 6px; box-sizing: border-box; background: var(--card); color: var(--text); }
         .toolbar { display: flex; gap: 5px; margin-bottom: 10px; flex-wrap: wrap; }
         .t-btn { padding: 5px 10px; cursor: pointer; border: 1px solid #ccc; border-radius: 4px; background: var(--light); color: var(--text); }
-        .admin-input { width: 100%; padding: 12px; margin-bottom: 10px; border: 1px solid #ccc; border-radius: 6px; box-sizing: border-box; background: var(--card); color: var(--text); }
 
         footer { background: var(--dark); color: white; text-align: center; padding: 30px; margin-top: 20px; }
         @media (max-width: 768px) { .main-layout { flex-direction: column; } }
@@ -61,38 +57,33 @@
     <h1>צופף חדשות</h1>
 </header>
 
-<div class="ticker-wrap">
-    <div class="ticker" id="ticker-text">טוען מבזקים אחרונים...</div>
-</div>
-
 <div id="admin-panel">
-    <h3>עריכת מבזק אישי (9188)</h3>
+    <h3>יצירת מבזק חדש (9188)</h3>
     <div class="toolbar">
         <button class="t-btn" onclick="tag('b')"><b>B</b></button>
         <button class="t-btn" onclick="tag('i')"><i>I</i></button>
-        <button class="t-btn" onclick="addCol()">🎨 צבע</button>
         <button class="t-btn" onclick="addSpol()">🙈 ספוילר</button>
         <button class="t-btn" onclick="addLink()">🔗 קישור</button>
         <button class="t-btn" onclick="addPoll()">📊 סקר</button>
     </div>
     <input type="text" id="admTitle" class="admin-input" placeholder="כותרת המבזק">
-    <textarea id="admBody" class="admin-input" rows="5" placeholder="תוכן המבזק (הוסף אימוג'ים 😀)"></textarea>
-    <button onclick="goGit()" style="background:#28a745; color:white; border:none; padding:12px; width:100%; border-radius:6px; cursor:pointer; font-weight:bold;">פרסם ב-GitHub</button>
+    <textarea id="admBody" class="admin-input" rows="5" placeholder="תוכן המבזק... (אפשר להוסיף אימוג'ים 😀)"></textarea>
+    <button onclick="goGit()" style="background:#28a745; color:white; border:none; padding:12px; width:100%; border-radius:6px; cursor:pointer; font-weight:bold;">שמור ופרסם ב-GitHub</button>
 </div>
 
 <div class="main-layout">
-    <div class="content" id="feed">טוען...</div>
+    <div class="content" id="feed">טוען מבזקים...</div>
     <aside class="sidebar">
         <div class="ad-box">
-            <h4 style="margin:0; color:#ffca28;">במה לפרסום</h4>
-            <p>העסק שלך יכול להופיע כאן!</p>
-            <a href="mailto:s75247002@gmail.com" style="color:var(--main); font-weight:bold;">לחצו ליצירת קשר</a>
+            <h4 style="margin:0; color:#ffca28;">פרסום</h4>
+            <p>מקום לפרסומת שלך</p>
+            <a href="mailto:s75247002@gmail.com" style="color:var(--main); font-weight:bold;">צרו קשר</a>
         </div>
     </aside>
 </div>
 
 <footer>
-    רוצים לפרסם אצלנו? <a href="mailto:s75247002@gmail.com" style="color:#ffca28;">s75247002@gmail.com</a>
+    © 2026 צופף חדשות | <a href="mailto:s75247002@gmail.com" style="color:#ffca28; text-decoration:none;">s75247002@gmail.com</a>
 </footer>
 
 <script>
@@ -100,10 +91,9 @@
     function checkAdmin() { if(prompt("קוד ניהול:") === "9188") document.getElementById('admin-panel').style.display='block'; }
     
     function tag(t) { document.getElementById('admBody').value += `<${t}>טקסט</${t}>`; }
-    function addCol() { document.getElementById('admBody').value += `<span style="color:red">טקסט צבעוני</span>`; }
     function addSpol() { document.getElementById('admBody').value += `<span class="spoiler" onclick="this.classList.toggle('open')">ספוילר מוסתר</span>`; }
     function addLink() {
-        const u = prompt("URL:"); const t = prompt("Text:");
+        const u = prompt("כתובת:"); const t = prompt("טקסט:");
         if(u && t) document.getElementById('admBody').value += `<a href="${u}" target="_blank" style="color:#007bff">${t}</a>`;
     }
     function addPoll() { document.getElementById('admBody').value += `\n[POLL] שאלה | תשובה 1 | תשובה 2`; }
@@ -114,34 +104,42 @@
         if(text.includes("[POLL]")) {
             const p = text.split("|");
             let h = `<div class="poll-box"><strong>${p[0].replace("[POLL]","")}</strong>`;
-            for(let i=1; i<p.length; i++) h += `<div class="poll-opt" onclick="alert('תודה!')">${p[i]}</div>`;
+            for(let i=1; i<p.length; i++) h += `<div class="poll-opt" onclick="alert('תודה על ההצבעה!')">${p[i]}</div>`;
             return h + `</div>`;
         }
         return text;
     }
 
-    fetch('news.json').then(r => r.json()).then(data => {
-        const f = document.getElementById('feed');
-        const t = document.getElementById('ticker-text');
-        f.innerHTML = ''; t.innerHTML = data.map(i => i.title).join(" • ");
-        data.forEach(i => {
-            const d = document.createElement('div');
-            d.className = 'news-card';
-            d.innerHTML = `
-                <div class="news-time">${i.time || 'עכשיו'} | ${i.source || 'מערכת'}</div>
-                <div class="news-title">${i.title}</div>
-                <div class="news-body">${parse(i.body)}</div>
-                <div class="reactions">
-                    <button class="react-btn" onclick="this.style.background='#d1e7dd'">🙏</button>
-                    <button class="react-btn" onclick="this.style.background='#d1e7dd'">👍</button>
-                    <button class="react-btn" onclick="this.style.background='#d1e7dd'">👎</button>
-                    <button class="react-btn" onclick="this.style.background='#d1e7dd'">😥</button>
-                    <button class="react-btn" onclick="this.style.background='#d1e7dd'">😀</button>
-                </div>
-            `;
-            f.appendChild(d);
-        });
-    });
+    function loadNews() {
+        // הוספת Timestamp כדי למנוע Cache ולהבטיח עדכון מהיר
+        fetch('news.json?t=' + new Date().getTime())
+            .then(r => r.json())
+            .then(data => {
+                const f = document.getElementById('feed');
+                f.innerHTML = '';
+                data.forEach(i => {
+                    const d = document.createElement('div');
+                    d.className = 'news-card';
+                    d.innerHTML = `
+                        <div class="news-time">${i.time || 'עכשיו'} | ${i.source || 'מערכת'}</div>
+                        <div class="news-title">${i.title}</div>
+                        <div class="news-body">${parse(i.body)}</div>
+                        <div class="reactions">
+                            <button class="react-btn" onclick="this.style.background='#d1e7dd'">🙏</button>
+                            <button class="react-btn" onclick="this.style.background='#d1e7dd'">👍</button>
+                            <button class="react-btn" onclick="this.style.background='#d1e7dd'">👎</button>
+                            <button class="react-btn" onclick="this.style.background='#d1e7dd'">😥</button>
+                            <button class="react-btn" onclick="this.style.background='#d1e7dd'">😀</button>
+                        </div>
+                    `;
+                    f.appendChild(d);
+                });
+            });
+    }
+
+    loadNews();
+    // רענון אוטומטי כל 45 שניות
+    setInterval(loadNews, 45000);
 </script>
 </body>
 </html>
