@@ -3,80 +3,145 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>צופף חדשות - כתבות מלאות</title>
+    <title>צופף חדשות - המערכת המלאה</title>
+    <script src="https://cdn.jsdelivr.net/npm/hebcal@2.3.2/dist/hebcal.min.js"></script>
     <style>
-        :root { --main: #004a99; --bg: #f4f7f6; --card: #ffffff; --text: #222; }
+        :root { --main: #004a99; --bg: #f0f2f5; --card: #ffffff; --text: #1c1e21; --urgent: #d93025; }
         body { font-family: 'Segoe UI', Tahoma, sans-serif; background: var(--bg); color: var(--text); margin: 0; padding: 0; }
-        header { background: var(--main); color: white; padding: 15px; text-align: center; font-size: 1.5em; font-weight: bold; }
         
-        .container { max-width: 900px; margin: 20px auto; padding: 0 15px; }
+        .top-bar { background: #000; color: #fff; padding: 5px 20px; display: flex; justify-content: space-between; font-size: 0.9em; font-weight: bold; }
+        header { background: var(--main); color: white; padding: 15px; display: flex; justify-content: space-between; align-items: center; sticky; top:0; z-index:100; }
         
-        .news-card { background: var(--card); border-radius: 15px; margin-bottom: 25px; padding: 20px; border: 1px solid #ddd; box-shadow: 0 4px 6px rgba(0,0,0,0.05); }
-        .meta { font-size: 0.85em; color: #666; margin-bottom: 10px; font-weight: bold; }
-        .news-title { font-size: 1.7em; font-weight: bold; margin-bottom: 15px; line-height: 1.3; color: #000; }
+        .container { max-width: 1200px; margin: 20px auto; display: flex; gap: 20px; padding: 0 15px; }
+        .feed { flex: 3; }
+        .sidebar { flex: 1; min-width: 300px; }
+
+        /* כרטיס מבזק */
+        .news-card { background: var(--card); border-radius: 15px; margin-bottom: 20px; overflow: hidden; border: 1px solid #ddd; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+        .news-card.urgent { border-right: 10px solid var(--urgent); }
+        .card-inner { padding: 20px; }
+        .news-title { font-size: 1.6em; font-weight: bold; margin-bottom: 10px; display: block; color: #000; text-decoration: none; }
         
-        /* כפתור ספוילר */
-        .spoiler-btn { background: #f0f2f5; border: 2px solid var(--main); color: var(--main); padding: 10px 20px; border-radius: 30px; cursor: pointer; font-weight: bold; font-size: 1em; width: 100%; transition: 0.3s; }
-        .spoiler-btn:hover { background: var(--main); color: white; }
-        
-        /* תוכן הכתבה המלאה */
-        .article-content { display: none; margin-top: 20px; padding-top: 20px; border-top: 1px solid #eee; line-height: 1.8; font-size: 1.1em; white-space: pre-wrap; color: #333; }
-        
-        .footer-link { margin-top: 15px; display: block; color: var(--main); text-decoration: none; font-weight: bold; font-size: 0.9em; }
+        /* ספוילר */
+        .full-content { display: none; margin-top: 15px; padding: 15px; background: #f9f9f9; border-radius: 8px; line-height: 1.6; white-space: pre-wrap; border-top: 1px solid #eee; }
+        .read-more-btn { background: #f0f2f5; border: 1px solid var(--main); color: var(--main); padding: 8px 15px; border-radius: 20px; cursor: pointer; font-weight: bold; margin-top: 10px; width: 100%; }
+
+        /* לייקים ותגובות */
+        .actions { display: flex; gap: 10px; margin-top: 15px; border-top: 1px solid #eee; padding-top: 10px; }
+        .action-btn { background: #f0f2f5; border: none; padding: 8px 12px; border-radius: 15px; cursor: pointer; font-size: 0.9em; font-weight: bold; }
+        .action-btn.active { background: var(--main); color: white; }
+
+        /* לוח ניהול */
+        #admin-panel { display: none; background: white; border: 3px solid var(--main); padding: 20px; border-radius: 15px; margin-bottom: 20px; }
+        .admin-input { width: 100%; padding: 10px; margin-bottom: 10px; border: 1px solid #ccc; border-radius: 8px; }
+
+        /* מודעה */
+        .ad-box { position: sticky; top: 80px; background: white; border: 4px solid #ffca28; border-radius: 15px; padding: 20px; text-align: center; }
+        .ad-btn { background: var(--main); color: white; padding: 12px; border-radius: 25px; text-decoration: none; font-weight: bold; display: block; margin-top: 15px; }
+
+        @media (max-width: 800px) { .container { flex-direction: column; } }
     </style>
 </head>
 <body>
 
-<header>צופף חדשות 🗞️</header>
+<div class="top-bar">
+    <div>📅 <span id="heb-date"></span></div>
+    <div>💲 דולר: 3.72 | 🌡️ <span id="temp">24°C</span></div>
+</div>
 
-<div class="container" id="news-feed">
-    <div style="text-align:center; padding:50px;">טוען את הכתבות המלאות... 🔄</div>
+<header>
+    <button onclick="toggleAdmin()" style="background:none; border:none; color:white; font-size:24px; cursor:pointer;">⚙️</button>
+    <h1 style="margin:0;">צופף חדשות 🗞️</h1>
+    <div style="width:40px;"></div>
+</header>
+
+<div class="container">
+    <main class="feed">
+        <div id="admin-panel">
+            <h3>מבזק חדש</h3>
+            <input type="text" id="admTitle" class="admin-input" placeholder="כותרת המבזק">
+            <textarea id="admBody" class="admin-input" rows="4" placeholder="תוכן הכתבה המלאה (יופיע בספוילר)"></textarea>
+            <label><input type="checkbox" id="admUrgent"> מבזק דחוף 🚨</label>
+            <button onclick="createCode()" style="background:green; color:white; border:none; padding:15px; width:100%; border-radius:10px; cursor:pointer; font-weight:bold; margin-top:10px;">הפק קוד ל-JSON</button>
+            <pre id="output" style="display:none; background:#eee; padding:10px; margin-top:10px; white-space:pre-wrap;"></pre>
+        </div>
+        
+        <div id="news-feed">טוען מבזקים... 🔄</div>
+    </main>
+
+    <aside class="sidebar">
+        <div class="ad-box">
+            <h3 style="background:#ffca28; margin:-20px -20px 15px -20px; padding:10px;">במה לפרסום 📢</h3>
+            <p><b>רוצים לפרסם כאן?</b></p>
+            <a href="mailto:s75247002@gmail.com" class="ad-btn">📧 שלחו מייל לפרסום</a>
+        </div>
+    </aside>
 </div>
 
 <script>
+    function toggleAdmin() {
+        if(prompt("קוד מנהל:") === "9188") document.getElementById('admin-panel').style.display = 'block';
+    }
+
+    function createCode() {
+        const mivzak = {
+            title: document.getElementById('admTitle').value,
+            body: document.getElementById('admBody').value,
+            urgent: document.getElementById('admUrgent').checked,
+            time: new Date().toLocaleTimeString('he-IL', {hour:'2-digit', minute:'2-digit'}),
+            source: "מערכת צופף"
+        };
+        const out = document.getElementById('output');
+        out.innerText = JSON.stringify(mivzak, null, 2) + ",";
+        out.style.display = 'block';
+    }
+
     function toggleSpoiler(btn) {
         const content = btn.nextElementSibling;
-        if (content.style.display === "block") {
-            content.style.display = "none";
-            btn.innerText = "📖 לכתבה המלאה (ספוילר)";
-        } else {
-            content.style.display = "block";
-            btn.innerText = "✖️ סגור כתבה";
-        }
+        const isHidden = content.style.display === "none" || content.style.display === "";
+        content.style.display = isHidden ? "block" : "none";
+        btn.innerText = isHidden ? "✖️ סגור כתבה" : "📖 לכתבה המלאה (ספוילר)";
     }
 
-    async function loadNews() {
+    function render(data) {
         const feed = document.getElementById('news-feed');
-        try {
-            const response = await fetch('news.json?v=' + new Date().getTime());
-            const data = await response.json();
-            
-            if (!data.length) {
-                feed.innerHTML = '<p style="text-align:center;">אין חדשות כרגע.</p>';
-                return;
-            }
-
-            feed.innerHTML = '';
-            data.forEach(item => {
-                const card = document.createElement('div');
-                card.className = 'news-card';
-                card.innerHTML = `
-                    <div class="meta">🕒 ${item.time} | 🔹 ${item.source}</div>
+        feed.innerHTML = '';
+        data.forEach(item => {
+            const card = document.createElement('div');
+            card.className = `news-card ${item.urgent ? 'urgent' : ''}`;
+            card.innerHTML = `
+                <div class="card-inner">
+                    <div class="meta">🕒 ${item.time || ''} | ${item.source || 'מבזק'}</div>
                     <div class="news-title">${item.title}</div>
-                    <button class="spoiler-btn" onclick="toggleSpoiler(this)">📖 לכתבה המלאה (ספוילר)</button>
-                    <div class="article-content">${item.body}
-                        <a href="${item.link}" target="_blank" class="footer-link">🔗 למקור בכתבה לחץ כאן</a>
+                    <button class="read-more-btn" onclick="toggleSpoiler(this)">📖 לכתבה המלאה (ספוילר)</button>
+                    <div class="full-content">${item.body || 'אין תוכן נוסף'}</div>
+                    <div class="actions">
+                        <button class="action-btn" onclick="this.classList.toggle('active')">👍 0</button>
+                        <button class="action-btn" onclick="this.classList.toggle('active')">❤️ 0</button>
+                        <button onclick="window.open('https://wa.me/?text=${encodeURIComponent(item.title)}')" style="background:none; border:none; color:#25d366; font-weight:bold; cursor:pointer; margin-right:auto;">🟢 שתף</button>
                     </div>
-                `;
-                feed.appendChild(card);
-            });
-        } catch (e) {
-            feed.innerHTML = '<p style="text-align:center; color:red;">שגיאה בטעינה. וודא שהבוט סיים לרוץ.</p>';
-        }
+                </div>
+            `;
+            feed.appendChild(card);
+        });
     }
 
-    loadNews();
-    setInterval(loadNews, 60000);
+    async function load() {
+        try {
+            const r = await fetch('news.json?v=' + Date.now());
+            let text = await r.text();
+            let clean = text.trim();
+            if(clean.startsWith(',')) clean = clean.substring(1);
+            if(!clean.startsWith('[')) clean = '[' + clean;
+            if(clean.endsWith(',')) clean = clean.slice(0, -1);
+            if(!clean.endsWith(']')) clean = clean + ']';
+            render(JSON.parse(clean));
+        } catch(e) { console.error("Error loading news"); }
+    }
+
+    document.getElementById('heb-date').innerText = new Hebcal.HDate().toString('h');
+    load();
+    setInterval(load, 30000);
 </script>
 </body>
 </html>
